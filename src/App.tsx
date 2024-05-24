@@ -1,40 +1,43 @@
 import { useWallet } from "./provider"
 import { useState } from "react"
+import "./App.css"
 
 function SendItem(props: any) {
   const { onSubmit, title } = props
   const [params, setParams] = useState<string>("")
-
+  const { address } = useWallet()
   return (
-    <div style={{ margin: "0 90px" }}>
+    <div style={{ margin: "0 90px", borderBottom: "1px solid #eee", padding: "20px 0" }}>
       <div>
-        <div>{title}:</div>
-        <textarea style={{ width: "100%" }} cols={12} value={params} onChange={(e) => setParams(e.target.value)} />
+        <div>
+          {title}:{address}
+        </div>
+        <textarea style={{ width: "100%", fontFamily: "monospace;", color: "blue", padding: 6 }} cols={12} value={params} onChange={(e) => setParams(e.target.value)} />
       </div>
       <div>
         <button onClick={() => onSubmit(params)}>Send {title}</button>
       </div>
-      <div>---------------------------------------------------------------------------</div>
     </div>
   )
 }
 
 function Send() {
-  const { sendBox, sendInscribe, sendExchange, sendTransfer, sendSwap, sendNft } = useWallet()
+  const { sendBox, sendInscribe, sendExchange, sendTransfer, sendSwap, sendNft, address } = useWallet()
   return (
     <div style={{ fontSize: 12 }}>
-      <SendItem onSubmit={sendInscribe} title="sendInscribe" />
-      <SendItem onSubmit={sendExchange} title="sendExchange" />
-      <SendItem onSubmit={sendSwap} title="sendSwap" />
-      <SendItem onSubmit={sendTransfer} title="sendTransfer" />
-      <SendItem onSubmit={sendBox} title="sendBox" />
-      <SendItem onSubmit={sendNft} title="sendNfts" />
+      <div>{address}</div>
+      <SendItem key={1} onSubmit={sendInscribe} title="sendInscribe" />
+      <SendItem key={2} onSubmit={sendExchange} title="sendExchange" />
+      <SendItem key={3} onSubmit={sendSwap} title="sendSwap" />
+      <SendItem key={4} onSubmit={sendTransfer} title="sendTransfer" />
+      <SendItem key={5} onSubmit={sendBox} title="sendBox" />
+      <SendItem key={22} onSubmit={sendNft} title="sendNfts" />
     </div>
   )
 }
 
 function App() {
-  const { connect, address, network, signMessage } = useWallet()
+  const { connect, address, network, signMessage, balance } = useWallet()
   const [message, setMessage] = useState<any>(null)
 
   const singMsg = async (msg: string) => {
@@ -45,15 +48,17 @@ function App() {
   return (
     <div style={{ fontSize: 12 }}>
       <div style={{ display: "flex", gap: "10px", alignContent: "center", justifyContent: "space-between" }}>
-        <button onClick={() => connect && connect()}>{address ? address : "Connect Wallet"}</button>
-        <div>{network}</div>
+        <div style={{ display: "flex", alignItems: "center", gap: 20 }}>
+          <h1>wallet</h1>
+          <button onClick={() => connect && connect()}>{address ? address : "Connect Wallet"}</button>
+        </div>
+        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+          <div>{network}</div>-<div>{balance?.confirmed}</div>
+          <button onClick={() => singMsg("hello unielon wallet")}>Sign Message</button>
+        </div>
       </div>
       <br />
-      <div>
-        <button onClick={() => singMsg("hello unielon wallet")}>Sign Message</button>
-        <div>{message}</div>
-        <div>---------------------------------------------------------------------------</div>
-      </div>
+      <div>SingMessage: {message}</div>
       <Send />
     </div>
   )
