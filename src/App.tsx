@@ -1,9 +1,13 @@
 import { useWallet } from "./provider"
 
 function App() {
-  const wallet = useWallet()
-  console.log(wallet)
-  return <button onClick={() => wallet?.connect()}>{wallet?.address ? wallet.address : "Connect Wallet"}</button>
+  const { connect, address, network } = useWallet()
+  return (
+    <div>
+      <button onClick={() => connect && connect()}>{address ? address : "Connect Wallet"}</button>
+      <div>{network}</div>
+    </div>
+  )
 }
 
 export default App

@@ -37,4 +37,9 @@ export type ExchangeType = {
   to: string
 }
 
-export type RunActionType = InscribeType | TransferType | NftType | BoxType | SwapType | ExchangeType
+export type StakeType = {
+  p: string
+  op: string
+}
+
+export type RunActionType = InscribeType | TransferType | NftType | BoxType | SwapType | ExchangeType | StakeType

@@ -1,9 +1,6 @@
-import React, { createContext, useReducer, useContext, useEffect } from "react"
-import { BoxType, NftType, RunActionType, SwapType, TransferType, ExchangeType } from "./types"
+import React, { createContext, useReducer, useContext, useEffect, ContextType } from "react"
+import { BoxType, NftType, RunActionType, SwapType, TransferType, ExchangeType, StakeType } from "./types"
 
-// Unielon wallet state type
-// unielon order op: drc20, transfer, swap, box, exchange
-// p: drc20 contract address, transfer amount, swap amount, box amount, exchange amount
 export type WalletStateType = {
   account?: string[]
   address?: string | null
@@ -18,6 +15,8 @@ export type WalletStateType = {
   loading?: boolean | false
   sendError?: string | null
   connectLoading?: boolean | false
+  sendLoading?: boolean | false
+  initialize?: boolean | false
 }
 
 export type ActionType = {
@@ -35,19 +34,6 @@ export type WalletInfoType = {
 declare global {
   interface Window {
     unielon: any
-  }
-}
-
-export const getWalletInfo = async (): Promise<WalletInfoType> => {
-  const wallet = window.unielon
-  if (!window.unielon) {
-    throw new Error("🐶 Unielon wallet not installed...")
-  } else {
-    const [address] = await wallet.getAccounts()
-    const publicKey = await wallet.getPublicKey()
-    const balance = await wallet.getBalance()
-    const network = await wallet.getNetwork()
-    return { address, publicKey, balance, network }
   }
 }
 
@@ -75,7 +61,7 @@ export type TransferBodyType = {
   amt: string
   to: string
 }
-const initialState = {}
+const initialState: WalletStateType = {}
 
 const walletReducer = (state: WalletStateType, action: ActionType) => {
   switch (action.type) {
@@ -89,6 +75,19 @@ const walletReducer = (state: WalletStateType, action: ActionType) => {
   }
 }
 
+export const getWalletInfo = async (): Promise<WalletInfoType> => {
+  const wallet = window.unielon
+  if (!window.unielon) {
+    throw new Error("🐶 Unielon wallet not installed...")
+  } else {
+    const [address] = await wallet.getAccounts()
+    const publicKey = await wallet.getPublicKey()
+    const balance = await wallet.getBalance()
+    const network = await wallet.getNetwork()
+    return { address, publicKey, balance, network }
+  }
+}
+// createLp
 export type WalletActionType = {
   setState: (payload: WalletStateType) => void
   connect: () => void
@@ -102,11 +101,12 @@ export type WalletActionType = {
   getBalance: () => Promise<any>
   networkChange: (network: string) => void
   accountChange: (accounts: string[]) => void
+  signMessage: (msg: string) => Promise<string | null>
 }
 
 const walletAction = (state: WalletStateType, dispatch: React.Dispatch<ActionType>): WalletActionType => {
   const wallet = window.unielon
-  const { sendBox, createSwap, sendDogecoin, sendTrade, sendNft } = wallet
+  const { sendBox, createSwap, sendDogecoin, sendTrade, sendNft, createLp } = wallet
 
   function setState(payload: WalletStateType) {
     dispatch({
@@ -143,11 +143,13 @@ const walletAction = (state: WalletStateType, dispatch: React.Dispatch<ActionTyp
       try {
         setState({ connectLoading: true })
         const result = await window?.unielon.requestAccounts()
-        console.log("result:;", result)
         return result
       } finally {
         setState({ connectLoading: false })
       }
+    },
+    signMessage: async (msg: string): Promise<string | null> => {
+      return await window.unielon.signMessage(msg)
     },
     sendInscribe: async (params: InscribeType) => {
       return await sendTransaction(sendDogecoin, params)
@@ -167,6 +169,9 @@ const walletAction = (state: WalletStateType, dispatch: React.Dispatch<ActionTyp
     sendNft: async (params: NftType) => {
       return await sendTransaction(sendNft, params)
     },
+    sendStake: async (params: StakeType) => {
+      return await sendTransaction(createLp, params)
+    },
     getBalance: async () => {
       return await window.unielon.getBalance()
     },
@@ -175,30 +180,36 @@ const walletAction = (state: WalletStateType, dispatch: React.Dispatch<ActionTyp
 
 export type GlobalState = WalletStateType & WalletActionType
 
-const UnielonWalletContext = createContext<GlobalState | null>(null)
+const UnielonWalletContext = createContext<GlobalState>(initialState as GlobalState)
 
 export const WalletProvider = ({ children }: { children: React.ReactNode }) => {
   const [state, dispatch] = useReducer<React.Reducer<WalletStateType, ActionType>>(walletReducer, initialState)
-  const { setState, accountChange, netWorkChane, ...rest } = walletAction(state, dispatch)
-  const wallet = window.unielon
+  const action = walletAction(state, dispatch)
+  const { setState, accountChange, networkChange } = action
+  const { initialize } = state
+  const wallet = (window as any).unielon
 
+  // sendTrade
   const initWallet = async () => {
-    if (!(window as any).unielon) {
-      setState({ installed: false })
+    if (!wallet) {
+      setState({ installed: false, initialize: false })
     } else {
-      wallet.on("accountsChanged", accountChange)
-      wallet.on("networkChanged", netWorkChane)
-      // const walletInfo = await getWalletInfo()
-      setState({ installed: true })
+      const result = await getWalletInfo()
+      setState({ installed: true, ...result, initialize: true })
+      !initialize && wallet.on("accountsChanged", accountChange)
+      !initialize && wallet.on("networkChanged", networkChange)
     }
   }
 
   useEffect(() => {
     initWallet()
-    return () => {}
+    return () => {
+      initialize && wallet && wallet.removeListener("accountsChanged", accountChange)
+      initialize && wallet && wallet.removeListener("networkChanged", networkChange)
+    }
   }, [])
 
-  const value: GlobalState = { ...state, setState, ...rest }
+  const value: GlobalState = { ...state, ...action }
   return <UnielonWalletContext.Provider value={value}>{children}</UnielonWalletContext.Provider>
 }
 
