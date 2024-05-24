@@ -18,7 +18,7 @@ textarea {
   border: 1px solid #000;
   outline: none;
   border-radius: 4px;
-  font-family: "monospace";
+  font-family: 'monospace';
 
   &:focus {
     border-color: blue;

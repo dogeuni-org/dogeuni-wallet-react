@@ -1,1 +1,1 @@
-export * from "./walletProvider"
+export * from './walletProvider'

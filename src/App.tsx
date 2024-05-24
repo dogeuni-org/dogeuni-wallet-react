@@ -1,18 +1,18 @@
-import { useWallet } from "./provider"
-import { useState } from "react"
-import "./App.css"
+import { useWallet } from './provider'
+import { useState } from 'react'
+import './App.css'
 
 function SendItem(props: any) {
   const { onSubmit, title } = props
-  const [params, setParams] = useState<string>("")
+  const [params, setParams] = useState<string>('')
   const { address } = useWallet()
   return (
-    <div style={{ margin: "0 90px", borderBottom: "1px solid #eee", padding: "20px 0" }}>
+    <div style={{ margin: '0 90px', borderBottom: '1px solid #eee', padding: '20px 0' }}>
       <div>
         <div>
           {title}:{address}
         </div>
-        <textarea placeholder="This is send to wallet params..." style={{ width: "100%", color: "blue", padding: 6 }} cols={12} value={params} onChange={(e) => setParams(e.target.value)} />
+        <textarea placeholder="This is send to wallet params..." style={{ width: '100%', color: 'blue', padding: 6 }} cols={12} value={params} onChange={(e) => setParams(e.target.value)} />
       </div>
       <div>
         <button onClick={() => onSubmit(params)}>Send {title}</button>
@@ -47,15 +47,15 @@ function App() {
 
   return (
     <div style={{ fontSize: 12 }}>
-      <div style={{ display: "flex", gap: "10px", alignContent: "center", justifyContent: "space-between", padding: 10 }}>
-        <div style={{ display: "flex", alignItems: "center", gap: 20 }}>
-          <button onClick={() => connect && connect()}>{address ? address : "Connect Wallet"}</button>
+      <div style={{ display: 'flex', gap: '10px', alignContent: 'center', justifyContent: 'space-between', padding: 10 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 20 }}>
+          <button onClick={() => connect && connect()}>{address ? address : 'Connect Wallet'}</button>
           {connected && <button onClick={() => disconnect()}>disconnect</button>}
         </div>
-        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
           <div>{network}</div>-<div>{balance?.confirmed}</div>
           {message}
-          <button onClick={() => singMsg("hello unielon wallet")}>Sign Message</button>
+          <button onClick={() => singMsg('hello unielon wallet')}>Sign Message</button>
         </div>
       </div>
       <br />

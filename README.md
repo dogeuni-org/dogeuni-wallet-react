@@ -16,7 +16,8 @@ npm i unielon-wallet-react --save
 ## Initialize
 
 ```jsx
-// App.jsx
+/* App.jsx */
+
 import { WalletConnect } from 'unielon-react-react'
 
 export default App(){
@@ -32,12 +33,13 @@ export default App(){
 ### connect to unielon wallet
 
 ```jsx
-// ConnectButton.jsx
-import { useWallet } from "./provider"
+/* ConnectButton.jsx */
+
+import { useWallet } from './provider'
 
 export default function ConnectButton() {
   const { connect, connectLoading, address } = useWallet()
   console.log(wallet)
-  return <button onClick={() => wallet?.connect()}>{connectLoading ? "connecting..." : address ? wallet.address : "Connect Wallet"}</button>
+  return <button onClick={() => wallet?.connect()}>{connectLoading ? 'connecting...' : address ? wallet.address : 'Connect Wallet'}</button>
 }
 ```
