@@ -32,10 +32,10 @@ export default App(){
 ### connect to unielon wallet
 
 ```jsx
-// Header.jsx
+// ConnectButton.jsx
 import { useWallet } from "./provider"
 
-export default function Header() {
+export default function ConnectButton() {
   const { connect, connectLoading, address } = useWallet()
   console.log(wallet)
   return <button onClick={() => wallet?.connect()}>{connectLoading ? "connecting..." : address ? wallet.address : "Connect Wallet"}</button>
