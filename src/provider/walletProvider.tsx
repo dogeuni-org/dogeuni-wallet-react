@@ -97,6 +97,7 @@ export type WalletActionType = {
   sendSwap: (params: SwapType) => Promise<WalletResultType | null>
   sendBox: (params: BoxType) => Promise<WalletResultType | null>
   sendNft: (params: NftType) => Promise<WalletResultType | null>
+  sendStake: (params: StakeType) => Promise<WalletResultType | null>
   sendTransaction: (run: (params: RunActionType) => Promise<WalletResultType | null>, params: RunActionType) => void
   getBalance: () => Promise<any>
   networkChange: (network: string) => void
