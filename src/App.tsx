@@ -12,7 +12,7 @@ function SendItem(props: any) {
         <div>
           {title}:{address}
         </div>
-        <textarea style={{ width: "100%", fontFamily: "monospace;", color: "blue", padding: 6 }} cols={12} value={params} onChange={(e) => setParams(e.target.value)} />
+        <textarea placeholder="This is send to wallet params..." style={{ width: "100%", color: "blue", padding: 6 }} cols={12} value={params} onChange={(e) => setParams(e.target.value)} />
       </div>
       <div>
         <button onClick={() => onSubmit(params)}>Send {title}</button>
@@ -37,7 +37,7 @@ function Send() {
 }
 
 function App() {
-  const { connect, address, network, signMessage, balance } = useWallet()
+  const { connect, address, network, signMessage, balance, connected } = useWallet()
   const [message, setMessage] = useState<any>(null)
 
   const singMsg = async (msg: string) => {
@@ -50,6 +50,7 @@ function App() {
       <div style={{ display: "flex", gap: "10px", alignContent: "center", justifyContent: "space-between" }}>
         <div style={{ display: "flex", alignItems: "center", gap: 20 }}>
           <h1>wallet</h1>
+          <div>{connected ? "connected" : "no connected..."}</div>
           <button onClick={() => connect && connect()}>{address ? address : "Connect Wallet"}</button>
         </div>
         <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
@@ -58,7 +59,7 @@ function App() {
         </div>
       </div>
       <br />
-      <div>SingMessage: {message}</div>
+      {/* <div>SingMessage: {message}</div> */}
       <Send />
     </div>
   )
