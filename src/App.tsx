@@ -37,7 +37,7 @@ function Send() {
 }
 
 function App() {
-  const { connect, address, network, signMessage, balance, connected } = useWallet()
+  const { connect, address, network, signMessage, balance, connected, disconnect } = useWallet()
   const [message, setMessage] = useState<any>(null)
 
   const singMsg = async (msg: string) => {
@@ -47,19 +47,19 @@ function App() {
 
   return (
     <div style={{ fontSize: 12 }}>
-      <div style={{ display: "flex", gap: "10px", alignContent: "center", justifyContent: "space-between" }}>
+      <div style={{ display: "flex", gap: "10px", alignContent: "center", justifyContent: "space-between", padding: 10 }}>
         <div style={{ display: "flex", alignItems: "center", gap: 20 }}>
-          <h1>wallet</h1>
-          <div>{connected ? "connected" : "no connected..."}</div>
           <button onClick={() => connect && connect()}>{address ? address : "Connect Wallet"}</button>
+          {connected && <button onClick={() => disconnect()}>disconnect</button>}
         </div>
         <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
           <div>{network}</div>-<div>{balance?.confirmed}</div>
+          {message}
           <button onClick={() => singMsg("hello unielon wallet")}>Sign Message</button>
         </div>
       </div>
       <br />
-      {/* <div>SingMessage: {message}</div> */}
+      <div>SingMessage: {message}</div>
       <Send />
     </div>
   )

@@ -12,20 +12,21 @@ export type BalanceType = {
   unconfirmed: string
   total: string
 }
-export interface WalletInfoType {
+
+export type WalletInfoType = {
   address: string | null
   publicKey?: string | null | undefined
-  balance: any[]
+  balance: BalanceType
   network: string | null
-  addressList: string[]
+  account: string[]
 }
 
 export type WalletStateType = {
-  installed?: boolean | false
-  initialize?: boolean | false
-  connected?: boolean | false
-  sendLoading?: boolean | false
-  connectLoading?: boolean | false
+  installed?: boolean
+  initialize?: boolean
+  connected?: boolean
+  sendLoading?: boolean
+  connectLoading?: boolean
   loading?: boolean
   sendError?: string
   drc20?: any[]
@@ -35,7 +36,6 @@ export type WalletStateType = {
   publicKey?: string | null | undefined
   balance?: BalanceType
   network?: string | null
-  addressList?: string[]
   account?: string[]
 }
 
@@ -70,6 +70,7 @@ export type WalletActionType = {
   networkChange: (network: string) => void
   accountChange: (accounts: string[]) => void
   signMessage: (msg: string) => Promise<string | null>
+  disconnect: () => void
 }
 
 export type GlobalState = WalletStateType & WalletActionType
@@ -78,18 +79,16 @@ const initialState: WalletStateType = {
   address: null,
   balance: {} as any,
   network: null,
-  addressList: [],
   account: [],
   sendLoading: false,
   connectLoading: false,
   loading: false,
   sendError: "",
-  installed: false,
-  initialize: false,
   connected: false,
   drc20: [],
   orders: [],
   dogecoinBalance: null,
+  publicKey: null,
 }
 
 const walletReducer = (state: WalletStateType, action: ActionType) => {
@@ -109,13 +108,13 @@ export const getWalletInfo = async (): Promise<WalletStateType> => {
   if (!window.unielon) {
     throw new Error("🐶 Unielon wallet not installed...")
   } else {
-    const addressList = await wallet.getAccounts()
+    const account = await wallet.getAccounts()
     const publicKey = await wallet.getPublicKey()
     const balance: BalanceType = await wallet.getBalance()
     const network = await wallet.getNetwork()
-    const [address] = addressList
-    console.log("Init::Result ===", { addressList, address, publicKey, balance, network })
-    return { addressList, address, publicKey, balance, network, dogecoinBalance: balance?.confirmed }
+    const [address] = account
+    console.log("Wallet Account Info::Result ===", { account, address, publicKey, balance, network })
+    return { account, address, publicKey, balance, network, dogecoinBalance: balance?.confirmed, connected: !!address }
   }
 }
 
@@ -123,10 +122,6 @@ export const walletAction = (state: WalletStateType, dispatch: React.Dispatch<Ac
   const wallet = window.unielon
   const { sendBox, createSwap, sendDogecoin, sendTrade, sendNft, createLp } = wallet
 
-  /**
-   * Sets the state of the wallet.
-   * @param payload - The payload to set the state.
-   */
   function setState(payload: WalletStateType) {
     dispatch({
       type: "SET_STATE",
@@ -134,12 +129,6 @@ export const walletAction = (state: WalletStateType, dispatch: React.Dispatch<Ac
     })
   }
 
-  /**
-   * Sends a transaction using the provided run function and parameters.
-   * @param run - The function to run the transaction.
-   * @param params - The parameters for the transaction.
-   * @returns The result of the transaction or null if an error occurred.
-   */
   async function sendTransaction(run: (params: RunActionType) => Promise<WalletResultType | null>, params: RunActionType) {
     if (!window.unielon || !run) return null
     try {
@@ -164,23 +153,27 @@ export const walletAction = (state: WalletStateType, dispatch: React.Dispatch<Ac
     getBalance,
     sendTransaction,
     networkChange: async (network: string) => {
-      setState({ network })
       const result = await getWalletInfo()
-      setState({ ...result })
+      setState({ ...result, network })
     },
-    accountChange: async (accounts: string[]) => {
-      setState({ account: accounts, address: accounts[0] })
+    accountChange: async () => {
       const result = await getWalletInfo()
-      setState({ ...result })
+      setState(result?.address ? result : initialState)
     },
     connect: async () => {
       try {
         setState({ connectLoading: true })
         const result = await window?.unielon.requestAccounts()
-        return result
+        const [address] = result
+        const infoWallet = await getWalletInfo()
+        setState(infoWallet)
+        return address
       } finally {
         setState({ connectLoading: false })
       }
+    },
+    disconnect: async () => {
+      setState(initialState)
     },
     signMessage: async (msg: string): Promise<string | null> => {
       return await window.unielon.signMessage(msg)
@@ -215,7 +208,7 @@ export const WalletProvider = ({ children }: { children: React.ReactNode }) => {
   const [state, dispatch] = useReducer<React.Reducer<WalletStateType, ActionType>>(walletReducer, initialState)
   const action = walletAction(state, dispatch)
   const { setState, accountChange, networkChange } = action
-  const { initialize } = state
+  const { connected } = state
   const wallet = (window as any).unielon
 
   const initWallet = async () => {
@@ -223,17 +216,18 @@ export const WalletProvider = ({ children }: { children: React.ReactNode }) => {
       setState({ installed: false, initialize: false })
     } else {
       const result = await getWalletInfo()
-      setState({ installed: true, initialize: true, connected: true, ...result })
-      wallet.on("accountsChanged", accountChange)
-      wallet.on("networkChanged", networkChange)
+      const { address } = result
+      setState(address ? { connected: true, ...result } : { connected: false })
+      wallet && wallet.on("accountsChanged", accountChange)
+      wallet && wallet.on("networkChanged", networkChange)
     }
   }
 
   useEffect(() => {
     initWallet()
     return () => {
-      initialize && wallet && wallet.removeListener("accountsChanged", accountChange)
-      initialize && wallet && wallet.removeListener("networkChanged", networkChange)
+      connected && wallet && wallet.removeListener("accountsChanged", accountChange)
+      connected && wallet && wallet.removeListener("networkChanged", networkChange)
     }
   }, [])
 
