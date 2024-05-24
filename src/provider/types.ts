@@ -1,20 +1,34 @@
+enum InscribeOp {
+  DEPLOY = 'deploy',
+  MINT = 'mint',
+}
+
 export type InscribeType = {
   p: string
-  op: string
-  amt: string
+  op: InscribeOp
+  tick: string
+  max?: string
+  lim?: string
+}
+
+enum SwapOp {
+  WITHDRAW = 'withdraw',
+  DEPOSIT = 'deposit',
+  SWAP = 'swap',
 }
 
 export type SwapType = {
-  p: string
-  op: string
+  p: 'wdoge' | 'drc-20'
+  op: SwapOp
+  tick: string
   amt: string
-  to: string
 }
 
 export type BoxType = {
   p: string
-  op: string
+  op: InscribeOp
   amt: string
+  liqblock: number
 }
 
 export type NftType = {

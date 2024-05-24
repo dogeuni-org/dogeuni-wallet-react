@@ -5,10 +5,14 @@
   "type": "module",
   "author": "mars.saul",
   "license": "MIT",
-  "repository": "https://github.com/unielon-org/unielon-wallet-react",
+  "repository": {
+    "url":"https://github.com/unielon-org/unielon-wallet-react", 
+    "type": "git"
+  },
+  "homepage": "https://unielon.com",
   "description": "unielon wallet js sdk rom react provider、swap pools base action, base use for React",
-  "main": "dist/index.js",
-  "module": "dist/index.modern.js",
+  "main": "src/index.js",
+  "module": "src/index.ts",
   "source": "src/index.ts",
   "engines": {
     "node": ">=16"

@@ -3,30 +3,40 @@ import { useState } from 'react'
 import './App.css'
 
 function SendItem(props: any) {
-  const { onSubmit, title } = props
+  const { onSubmit, title, eg } = props
   const [params, setParams] = useState<string>('')
-  const { address } = useWallet()
+  const [result, setResult] = useState<any>(null)
+
+  const submit = async () => {
+    const res = await onSubmit(JSON.parse(params))
+    setResult(res)
+  }
+
   return (
-    <div style={{ margin: '0 90px', borderBottom: '1px solid #eee', padding: '20px 0' }}>
+    <div style={{ borderBottom: '1px solid #eee', padding: '20px 0' }}>
       <div>
-        <div>
-          {title}:{address}
+        <div style={{ padding: '10px 0' }}>
+          <code>{title}@example:</code>
+          <div>
+            <code>{eg}</code>
+          </div>
         </div>
-        <textarea placeholder="This is send to wallet params..." style={{ width: '100%', color: 'blue', padding: 6 }} cols={12} value={params} onChange={(e) => setParams(e.target.value)} />
+        <textarea placeholder="This is send to wallet params..." style={{ width: '100%', fontSize: 14, padding: 6 }} cols={12} value={params} onChange={(e) => setParams(e.target.value)} />
       </div>
       <div>
-        <button onClick={() => onSubmit(params)}>Send {title}</button>
+        <button onClick={submit}>Send {title}</button>
       </div>
+      <div>result:{result}</div>
     </div>
   )
 }
 
-function Send() {
+function SendActions() {
   const { sendBox, sendInscribe, sendExchange, sendTransfer, sendSwap, sendNft, address } = useWallet()
   return (
-    <div style={{ fontSize: 12 }}>
+    <div style={{ fontSize: 12, width: 800, margin: '0 auto' }}>
       <div>{address}</div>
-      <SendItem key={1} onSubmit={sendInscribe} title="sendInscribe" />
+      <SendItem key={1} onSubmit={sendInscribe} eg={'{"p":"drc20","op":"mint","amt":100000000,"tick":"THANKS","to_address":"DHErY5nQsKjEKYqSos914Xd2JDHVNS44fv"}'} title="sendInscribe" />
       <SendItem key={2} onSubmit={sendExchange} title="sendExchange" />
       <SendItem key={3} onSubmit={sendSwap} title="sendSwap" />
       <SendItem key={4} onSubmit={sendTransfer} title="sendTransfer" />
@@ -60,7 +70,7 @@ function App() {
       </div>
       <br />
       <div>SingMessage: {message}</div>
-      <Send />
+      <SendActions />
     </div>
   )
 }
