@@ -6,7 +6,7 @@
   "author": "mars.saul",
   "license": "MIT",
   "repository": {
-    "url":"https://github.com/unielon-org/unielon-wallet-react", 
+    "url": "https://github.com/unielon-org/unielon-wallet-react",
     "type": "git"
   },
   "homepage": "https://unielon.com",
@@ -26,6 +26,7 @@
     "prepare": "husky install"
   },
   "dependencies": {
+    "bignumber.js": "^9.1.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },

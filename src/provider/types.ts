@@ -24,13 +24,6 @@ export type SwapType = {
   amt: string
 }
 
-export type BoxType = {
-  p: string
-  op: InscribeOp
-  amt: string
-  liqblock: number
-}
-
 export type NftType = {
   p: string
   op: string
@@ -49,11 +42,24 @@ export type ExchangeType = {
   op: string
   amt: string
   to: string
+  tick0: string
+  tick1: string
 }
 
 export type StakeType = {
   p: string
   op: string
+  amt: string
+  tick: string
+}
+
+export type BoxType = {
+  p: string
+  op: InscribeOp
+  amt0: string
+  amt1: string
+  liqblock: number
+  tick: string
 }
 
 export type RunActionType = InscribeType | TransferType | NftType | BoxType | SwapType | ExchangeType | StakeType
