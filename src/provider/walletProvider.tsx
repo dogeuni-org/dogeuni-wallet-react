@@ -51,7 +51,7 @@ const walletReducer = (state: WalletStateType, action: ActionType) => {
 }
 
 export const getWalletInfo = async (): Promise<WalletStateType> => {
-  const wallet = window.unielon
+  const wallet = (window as any).unielon
   if (!window.unielon) {
     throw new Error('🐶 Unielon wallet not installed...')
   } else {
@@ -65,8 +65,8 @@ export const getWalletInfo = async (): Promise<WalletStateType> => {
   }
 }
 
-export const walletAction = (dispatch: React.Dispatch<ActionType>): WalletActionType => {
-  const wallet = window.unielon
+export const walletAction = (dispatch: React.Dispatch<ActionType>): WalletActionTyp => {
+  const wallet = (window as any).unielon
   const { sendBox, createSwap, sendDogecoin, sendTrade, sendNft, createLp } = wallet
 
   function setState(payload: WalletStateType) {
@@ -77,7 +77,8 @@ export const walletAction = (dispatch: React.Dispatch<ActionType>): WalletAction
   }
 
   async function sendTransaction(run: (params: RunActionType) => Promise<WalletResultType | null>, params: RunActionType) {
-    if (!window.unielon || !run) return null
+    const wallet = (window as any).unielon
+    if (!wallet || !run) return null
     try {
       setState({ loading: true })
       return await run(params)
@@ -110,7 +111,7 @@ export const walletAction = (dispatch: React.Dispatch<ActionType>): WalletAction
     connect: async () => {
       try {
         setState({ connectLoading: true })
-        const result = await window?.unielon.requestAccounts()
+        const result = await (window as any).unielon.requestAccounts()
         const [address] = result
         const infoWallet = await getWalletInfo()
         setState(infoWallet)
@@ -154,7 +155,7 @@ export const UnielonWalletContext = createContext<GlobalState>(initialState as G
 export const WalletProvider = ({ children }: { children: React.ReactNode }) => {
   const [state, dispatch] = useReducer<React.Reducer<WalletStateType, ActionType>>(walletReducer, initialState)
   const action = walletAction(dispatch)
-  const { setState, accountChange, networkChange } = action
+  const { setState, accountChange, networkChange } = action as WalletActionType
   const { connected } = state
   const wallet = (window as any).unielon
 
