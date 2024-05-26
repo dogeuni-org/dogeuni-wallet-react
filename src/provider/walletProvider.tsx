@@ -51,7 +51,7 @@ const walletReducer = (state: WalletStateType, action: ActionType) => {
 }
 
 export const getWalletInfo = async (): Promise<WalletStateType> => {
-  const wallet = window.unielon
+  const wallet = (window as any).unielon
   if (!window.unielon) {
     throw new Error('🐶 Unielon wallet not installed...')
   } else {
@@ -66,7 +66,7 @@ export const getWalletInfo = async (): Promise<WalletStateType> => {
 }
 
 export const walletAction = (dispatch: React.Dispatch<ActionType>): WalletActionType => {
-  const wallet = window.unielon
+  const wallet = (window as any).unielon
   const { sendBox, createSwap, sendDogecoin, sendTrade, sendNft, createLp } = wallet
 
   function setState(payload: WalletStateType) {
@@ -77,7 +77,8 @@ export const walletAction = (dispatch: React.Dispatch<ActionType>): WalletAction
   }
 
   async function sendTransaction(run: (params: RunActionType) => Promise<WalletResultType | null>, params: RunActionType) {
-    if (!window.unielon || !run) return null
+    const wallet = (window as any).unielon
+    if (!wallet || !run) return null
     try {
       setState({ loading: true })
       return await run(params)
