@@ -111,7 +111,7 @@ export const walletAction = (dispatch: React.Dispatch<ActionType>): WalletAction
     connect: async () => {
       try {
         setState({ connectLoading: true })
-        const result = await window?.unielon.requestAccounts()
+        const result = await (window as any).unielon.requestAccounts()
         const [address] = result
         const infoWallet = await getWalletInfo()
         setState(infoWallet)
