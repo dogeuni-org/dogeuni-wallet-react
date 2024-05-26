@@ -4,7 +4,7 @@ enum InscribeOp {
 }
 
 // sendDogecoin = async (toAddress: string, satoshis?: number,
-// options?: { feeRate: number, transferAddress: string, ticker: string, sendAmount: number | string, type: string, op: string, repeat?: number | string }) => {
+// for inscribe mint & deoply
 export type InscribeType = {
   p: string
   op: InscribeOp
@@ -19,6 +19,7 @@ enum SwapOp {
   SWAP = 'swap',
 }
 
+// for swap & pools create & remove
 export type SwapType = {
   p: 'wdoge' | 'drc-20'
   op: SwapOp
@@ -26,12 +27,14 @@ export type SwapType = {
   amt: string
 }
 
+// for nfts mint & deploy
 export type NftType = {
   p: string
   op: string
   amt: string
 }
 
+// for drc20 transfer
 export type TransferType = {
   p: string
   op: string
@@ -39,6 +42,7 @@ export type TransferType = {
   to: string
 }
 
+// for market
 export type ExchangeType = {
   p: string
   op: string
@@ -48,6 +52,7 @@ export type ExchangeType = {
   tick1: string
 }
 
+// for stake
 export type StakeType = {
   p: string
   op: string
@@ -55,6 +60,7 @@ export type StakeType = {
   tick: string
 }
 
+// for box
 export type BoxType = {
   p: string
   op: InscribeOp
