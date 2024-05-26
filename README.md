@@ -1,4 +1,4 @@
-# Unielon React Provider
+# Unielon Wallet browser extension & React Provider
 
 Powering the future for Unielon DRC20 Wallet.
 Connecting the Unielon Wallet to the base library through React Provider.
