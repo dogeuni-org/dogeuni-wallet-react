@@ -3,6 +3,8 @@ enum InscribeOp {
   MINT = 'mint',
 }
 
+// sendDogecoin = async (toAddress: string, satoshis?: number,
+// options?: { feeRate: number, transferAddress: string, ticker: string, sendAmount: number | string, type: string, op: string, repeat?: number | string }) => {
 export type InscribeType = {
   p: string
   op: InscribeOp

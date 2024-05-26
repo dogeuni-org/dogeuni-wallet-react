@@ -18,7 +18,9 @@ textarea {
   border: 1px solid #000;
   outline: none;
   border-radius: 4px;
-  font-family: 'monospace';
+  font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+  padding: 15px;
+  font-size: 12px;
 
   &:focus {
     border-color: blue;
