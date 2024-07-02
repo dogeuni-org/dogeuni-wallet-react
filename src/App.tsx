@@ -1,6 +1,7 @@
 import { useWallet } from './provider'
 import { useState } from 'react'
 import './App.css'
+import { valueFormat } from './utils'
 
 function SendItem(props: any) {
   const { onSubmit, title, eg } = props
@@ -36,7 +37,7 @@ function SendActions() {
   return (
     <div style={{ fontSize: 12, width: 800, margin: '0 auto' }}>
       <div>{address}</div>
-      <SendItem key={1} onSubmit={sendInscribe} eg={'{"p":"drc20","op":"mint","amt":100000000,"tick":"THANKS","to_address":"DHErY5nQsKjEKYqSos914Xd2JDHVNS44fv"}'} title="sendInscribe" />
+      <SendItem key={1} onSubmit={sendInscribe} eg={'{"p":"drc20","op":"mint","amt":100000000,"tick":"THANKS","to_address":""}'} title="sendInscribe" />
       <SendItem key={2} onSubmit={sendExchange} title="sendExchange" />
       <SendItem key={3} onSubmit={sendSwap} title="sendSwap" />
       <SendItem key={4} onSubmit={sendTransfer} title="sendTransfer" />
@@ -57,19 +58,19 @@ function App() {
 
   return (
     <div style={{ fontSize: 12 }}>
-      <div style={{ display: 'flex', gap: '10px', alignContent: 'center', justifyContent: 'space-between', padding: 10 }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 20 }}>
-          <button onClick={() => connect && connect()}>{address ? address : 'Connect Wallet'}</button>
-          {connected && <button onClick={() => disconnect()}>disconnect</button>}
-        </div>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-          <div>{network}</div>-<div>{balance?.confirmed}</div>
-          {message}
-          <button onClick={() => singMsg('hello unielon wallet')}>Sign Message</button>
+      <div style={{ display: 'flex', background: '#f8f8f8', gap: '10px', alignContent: 'center', justifyContent: 'space-between', padding: 10 }}>
+        <h1 style={{ fontWeight: 800, fontSize: 19, textTransform: 'uppercase' }}>unielon</h1>
+        <div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 20 }}>
+            <span style={{ fontSize: 18, fontWeight: 800 }}>{valueFormat(balance?.confirmed!)}</span>
+            {/* {connected && <button onClick={() => disconnect()}>disconnect</button>} */}
+            <button onClick={() => connect && connect()}>{address ? address : 'Connect Wallet'}</button>
+            {/* {message} */}
+            {/* <button onClick={() => singMsg('hello unielon wallet')}>Sign Message</button> */}
+          </div>
         </div>
       </div>
       <br />
-      <div>SingMessage: {message}</div>
       <SendActions />
     </div>
   )
