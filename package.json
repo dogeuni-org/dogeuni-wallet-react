@@ -3,8 +3,17 @@
   "private": true,
   "version": "0.0.1",
   "type": "module",
-  "author": "mars.saul",
+  "author": "saul <ninasaul@protonmail.com>",
   "license": "MIT",
+  "keywords": [
+    "unielon",
+    "drc20",
+    "dogecoin",
+    "dogecoin wallet"
+  ],
+  "bugs": {
+    "url": "https://github.com/unielon-org/unielon-wallet-react/issues"
+  },
   "repository": {
     "url": "https://github.com/unielon-org/unielon-wallet-react",
     "type": "git"

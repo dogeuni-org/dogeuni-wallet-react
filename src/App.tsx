@@ -62,7 +62,7 @@ function App() {
         <h1 style={{ fontWeight: 800, fontSize: 19, textTransform: 'uppercase' }}>unielon</h1>
         <div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 20 }}>
-            <span style={{ fontSize: 18, fontWeight: 800 }}>{valueFormat(balance?.confirmed!)}</span>
+            <span style={{ fontSize: 18, fontWeight: 800 }}>{valueFormat(balance?.confirmed || '0')}</span>
             {/* {connected && <button onClick={() => disconnect()}>disconnect</button>} */}
             <button onClick={() => connect && connect()}>{address ? address : 'Connect Wallet'}</button>
             {/* {message} */}
@@ -71,6 +71,10 @@ function App() {
         </div>
       </div>
       <br />
+      <div style={{ display: 'flex' }}>
+        {message}
+        <button onClick={() => singMsg('hello unielon wallet')}>Sign Message</button>
+      </div>
       <SendActions />
     </div>
   )
