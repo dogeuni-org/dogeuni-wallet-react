@@ -6,11 +6,11 @@ Connecting the Unielon Wallet to the base library through React Provider.
 ## Installation
 
 ```shell
-yarn add unielon-wallet-react
+yarn add @unielon/wallet-connect-react
 ```
 
 ```shell
-npm i unielon-wallet-react --save
+npm i @unielon/wallet-connect-react --save
 ```
 
 ## Initialize

@@ -16,12 +16,6 @@ import {
   GlobalState,
 } from './types'
 
-declare global {
-  interface Window {
-    unielon: any
-  }
-}
-
 const initialState: WalletStateType = {
   address: null,
   balance: {} as any,
@@ -37,6 +31,7 @@ const initialState: WalletStateType = {
   dogecoinBalance: null,
   publicKey: null,
 }
+const wallet = (window as any).unielon
 
 const walletReducer = (state: WalletStateType, action: ActionType) => {
   switch (action.type) {
@@ -51,8 +46,7 @@ const walletReducer = (state: WalletStateType, action: ActionType) => {
 }
 
 export const getWalletInfo = async (): Promise<WalletStateType> => {
-  const wallet = (window as any).unielon
-  if (!window.unielon) {
+  if (!wallet) {
     throw new Error('🐶 Unielon wallet not installed...')
   } else {
     const account = await wallet.getAccounts()
@@ -65,7 +59,7 @@ export const getWalletInfo = async (): Promise<WalletStateType> => {
   }
 }
 
-export const walletAction = (dispatch: React.Dispatch<ActionType>): WalletActionTyp => {
+export const walletAction = (dispatch: React.Dispatch<ActionType>): WalletActionType => {
   const wallet = (window as any).unielon
   const { sendBox, createSwap, sendDogecoin, sendTrade, sendNft, createLp } = wallet
 
@@ -77,7 +71,6 @@ export const walletAction = (dispatch: React.Dispatch<ActionType>): WalletAction
   }
 
   async function sendTransaction(run: (params: RunActionType) => Promise<WalletResultType | null>, params: RunActionType) {
-    const wallet = (window as any).unielon
     if (!wallet || !run) return null
     try {
       setState({ loading: true })
@@ -93,7 +86,9 @@ export const walletAction = (dispatch: React.Dispatch<ActionType>): WalletAction
   }
 
   async function getBalance() {
-    return await window.unielon.getBalance()
+    if (wallet) {
+      return await wallet.getBalance()
+    }
   }
 
   return {
@@ -111,7 +106,7 @@ export const walletAction = (dispatch: React.Dispatch<ActionType>): WalletAction
     connect: async () => {
       try {
         setState({ connectLoading: true })
-        const result = await (window as any).unielon.requestAccounts()
+        const result = await wallet.requestAccounts()
         const [address] = result
         const infoWallet = await getWalletInfo()
         setState(infoWallet)
@@ -124,7 +119,7 @@ export const walletAction = (dispatch: React.Dispatch<ActionType>): WalletAction
       setState(initialState)
     },
     signMessage: async (msg: string): Promise<string | null> => {
-      return await window.unielon.signMessage(msg)
+      return await wallet.signMessage(msg)
     },
     sendInscribe: async (params: InscribeType) => {
       return await sendTransaction(sendDogecoin, params)
@@ -157,7 +152,7 @@ export const WalletProvider = ({ children }: { children: React.ReactNode }) => {
   const action = walletAction(dispatch)
   const { setState, accountChange, networkChange } = action as WalletActionType
   const { connected } = state
-  const wallet = (window as any).unielon
+  const wallet = window.unielon
 
   const initWallet = async () => {
     if (!wallet) {
