@@ -1,6 +1,6 @@
 {
   "name": "@unielon/wallet-connect-react",
-  "private": true,
+  "private": false,
   "version": "0.0.1",
   "type": "module",
   "author": "saul <ninasaul@protonmail.com>",
