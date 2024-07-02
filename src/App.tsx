@@ -71,9 +71,9 @@ function App() {
         </div>
       </div>
       <br />
-      <div style={{ display: 'flex' }}>
-        {message}
+      <div style={{ display: 'flex', alignItems: 'center', width: 800, margin: '0 auto', gap: 20 }}>
         <button onClick={() => singMsg('hello unielon wallet')}>Sign Message</button>
+        {message}
       </div>
       <SendActions />
     </div>
