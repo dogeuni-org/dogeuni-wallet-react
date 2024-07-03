@@ -31,7 +31,6 @@ const initialState: WalletStateType = {
   dogecoinBalance: null,
   publicKey: null,
 }
-const wallet = (window as any).unielon!
 
 const walletReducer = (state: WalletStateType, action: ActionType) => {
   switch (action.type) {
@@ -46,6 +45,7 @@ const walletReducer = (state: WalletStateType, action: ActionType) => {
 }
 
 export const getWalletInfo = async (): Promise<WalletStateType> => {
+  const wallet = window?.unielon
   if (!wallet) {
     throw new Error('🐶 Unielon wallet not installed...')
   } else {
@@ -60,7 +60,7 @@ export const getWalletInfo = async (): Promise<WalletStateType> => {
 }
 
 export const walletAction = (dispatch: React.Dispatch<ActionType>): WalletActionType => {
-  const wallet = (window as any).unielon
+  const wallet = window?.unielon
   const { sendBox, createSwap, sendDogecoin, sendTrade, sendNft, createLp } = wallet
 
   function setState(payload: WalletStateType) {
@@ -71,6 +71,7 @@ export const walletAction = (dispatch: React.Dispatch<ActionType>): WalletAction
   }
 
   async function sendTransaction(run: (params: RunActionType) => Promise<WalletResultType | null>, params: RunActionType) {
+    const wallet = window?.unielon
     if (!wallet || !run) return null
     try {
       setState({ loading: true })
@@ -86,6 +87,7 @@ export const walletAction = (dispatch: React.Dispatch<ActionType>): WalletAction
   }
 
   async function getBalance() {
+    const wallet = window?.unielon
     if (wallet) {
       return await wallet.getBalance()
     }
@@ -152,8 +154,10 @@ export const WalletProvider = ({ children }: { children: React.ReactNode }) => {
   const action = walletAction(dispatch)
   const { setState, accountChange, networkChange } = action as WalletActionType
   const { connected } = state
-  const wallet = window.unielon
-
+  if (typeof window === 'undefined' || !window?.unielon) {
+    return <>{children}</>
+  }
+  const wallet = window?.unielon
   const initWallet = async () => {
     if (!wallet) {
       setState({ installed: false, initialize: false })
