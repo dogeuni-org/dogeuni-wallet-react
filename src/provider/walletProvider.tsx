@@ -18,7 +18,7 @@ import {
 
 const initialState: WalletStateType = {
   address: null,
-  balance: {} as any,
+  balance: null,
   network: null,
   account: [],
   sendLoading: false,

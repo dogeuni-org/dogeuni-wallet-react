@@ -99,7 +99,7 @@ export type WalletStateType = {
   dogecoinBalance?: string | null
   address?: string | null
   publicKey?: string | null | undefined
-  balance?: BalanceType
+  balance?: BalanceType | null
   network?: string | null
   account?: string[]
 }
