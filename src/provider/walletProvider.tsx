@@ -31,7 +31,7 @@ const initialState: WalletStateType = {
   dogecoinBalance: null,
   publicKey: null,
 }
-const wallet = (window as any).unielon
+const wallet = (window as any).unielon!
 
 const walletReducer = (state: WalletStateType, action: ActionType) => {
   switch (action.type) {
