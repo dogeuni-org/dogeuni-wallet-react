@@ -1,4 +1,4 @@
-enum InscribeOp {
+export enum InscribeOp {
   DEPLOY = 'deploy',
   MINT = 'mint',
 }
@@ -13,7 +13,7 @@ export type InscribeType = {
   lim?: string
 }
 
-enum SwapOp {
+export enum SwapOp {
   WITHDRAW = 'withdraw',
   DEPOSIT = 'deposit',
   SWAP = 'swap',
@@ -73,9 +73,9 @@ export type BoxType = {
 export type RunActionType = InscribeType | TransferType | NftType | BoxType | SwapType | ExchangeType | StakeType
 
 export type BalanceType = {
-  confirmed: string
-  unconfirmed: string
-  total: string
+  confirmed: string | null
+  unconfirmed: string | null
+  total: string | null
 }
 
 export type WalletInfoType = {
@@ -87,6 +87,8 @@ export type WalletInfoType = {
 }
 
 export type WalletStateType = {
+  address?: string | null
+  balance?: BalanceType | null
   installed?: boolean
   initialize?: boolean
   connected?: boolean
@@ -97,9 +99,7 @@ export type WalletStateType = {
   drc20?: any[]
   orders?: any[]
   dogecoinBalance?: string | null
-  address?: string | null
   publicKey?: string | null | undefined
-  balance?: BalanceType | null
   network?: string | null
   account?: string[]
 }

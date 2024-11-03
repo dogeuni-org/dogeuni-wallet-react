@@ -1,7 +1,7 @@
 {
   "name": "@unielon/wallet-connect-react",
   "private": false,
-  "version": "0.0.5",
+  "version": "0.0.14",
   "type": "module",
   "author": "saul <ninasaul@protonmail.com>",
   "license": "MIT",
@@ -20,9 +20,9 @@
   },
   "homepage": "https://unielon.com",
   "description": "unielon wallet js sdk rom react provider、swap pools base action, base use for React",
-  "main": "src/index.js",
-  "module": "src/index.ts",
-  "source": "src/index.ts",
+  "main": "dist/index.js",
+  "module": "dist/index.esm.js",
+  "types": "dist/lib/index.d.ts",
   "engines": {
     "node": ">=16"
   },
@@ -32,7 +32,8 @@
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "prettier": "prettier --write .",
     "preview": "vite preview",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "prepublishOnly": "npm run build && tsc --emitDeclarationOnly"
   },
   "dependencies": {
     "bignumber.js": "^9.1.2",
@@ -45,6 +46,11 @@
       "prettier --write --ignore-unknown"
     ]
   },
+  "files": [
+    "dist",
+    "index.js",
+    "README.md"
+  ],
   "devDependencies": {
     "@types/react": "^18.2.66",
     "@types/react-dom": "^18.2.22",
@@ -62,6 +68,7 @@
     "lint-staged": "^15.2.4",
     "prettier": "^3.2.5",
     "typescript": "^5.2.2",
-    "vite": "^5.2.0"
+    "vite": "^5.2.0",
+    "vite-plugin-dts": "^4.3.0"
   }
 }

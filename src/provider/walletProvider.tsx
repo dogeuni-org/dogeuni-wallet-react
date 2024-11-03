@@ -1,4 +1,12 @@
 import React, { createContext, useReducer, useContext, useEffect } from 'react'
+
+// Extend the Window interface to include the unielon property
+declare global {
+  interface Window {
+    unielon?: any
+  }
+}
+
 import {
   BoxType,
   NftType,
@@ -18,7 +26,11 @@ import {
 
 const initialState: WalletStateType = {
   address: null,
-  balance: null,
+  balance: {
+    confirmed: null,
+    unconfirmed: null,
+    total: null,
+  },
   network: null,
   account: [],
   sendLoading: false,
@@ -183,5 +195,9 @@ export const WalletProvider = ({ children }: { children: React.ReactNode }) => {
 }
 
 export const useWallet = () => {
-  return useContext(UnielonWalletContext)
+  const context = useContext(UnielonWalletContext)
+  if (!context) {
+    throw new Error('useWallet must be used within a WalletProvider')
+  }
+  return context
 }

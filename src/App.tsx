@@ -48,7 +48,8 @@ function SendActions() {
 }
 
 function App() {
-  const { connect, address, network, signMessage, balance, connected, disconnect } = useWallet()
+  // const { connect, address, network, signMessage, balance, connected, disconnect } = useWallet()
+  const { connect, address, signMessage, balance } = useWallet()
   const [message, setMessage] = useState<any>(null)
 
   const singMsg = async (msg: string) => {
