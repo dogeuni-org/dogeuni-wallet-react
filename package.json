@@ -7,9 +7,10 @@
   "license": "MIT",
   "keywords": [
     "unielon",
+    "unielon wallet connect",
     "drc20",
     "dogecoin",
-    "dogecoin wallet"
+    "dogecoin wallet connect"
   ],
   "bugs": {
     "url": "https://github.com/unielon-org/unielon-wallet-react/issues"
@@ -29,6 +30,7 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
+    "build:dev": "tsc && vite build --watch",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "prettier": "prettier --write .",
     "preview": "vite preview",

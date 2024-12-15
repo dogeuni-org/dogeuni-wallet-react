@@ -13,8 +13,8 @@
     // "allowImportingTsExtensions": true,
     // "noEmit": true,
     "jsx": "react-jsx",
-    "outDir":"dist",
-    "declaration":true,
+    "outDir": "dist",
+    "declaration": true,
     "declarationDir": "dist",
 
     /* Linting */
@@ -24,9 +24,7 @@
     "noFallthroughCasesInSwitch": true,
 
     "esModuleInterop": true,
-    "forceConsistentCasingInFileNames": true,
-
-    
+    "forceConsistentCasingInFileNames": true
   },
   "include": ["src"],
   "exclude": ["node_modules", "dist"]

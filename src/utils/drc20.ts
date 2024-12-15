@@ -1,13 +1,13 @@
 import BigNumber from 'bignumber.js'
 
-export const drcToDecimal = (drc: string, decimal: number = 8) => {
-  if (!drc) return '0'
-  return new BigNumber(drc).dividedBy(Math.pow(10, decimal)).toString()
+export const drcToDec = (drc: number | string | undefined | null | '', decimal: number = 8) => {
+  if (!drc) return ''
+  return new BigNumber(drc).div(Math.pow(10, decimal)).decimalPlaces(decimal, BigNumber.ROUND_DOWN).toFormat()
 }
 
-export const DecimalToDrc = (drc: string, decimal: number = 8) => {
-  if (!drc) return '0'
-  return new BigNumber(drc).multipliedBy(Math.pow(10, decimal)).toString()
+export const decToDrc = (drc: number | string | undefined | null | '', decimal: number = 8) => {
+  if (!drc) return ''
+  return new BigNumber(drc).multipliedBy(Math.pow(10, decimal)).decimalPlaces(0, BigNumber.ROUND_DOWN).toString()
 }
 
 export const valueFormat = (value: string, decimal: number = 8) => {
@@ -15,11 +15,17 @@ export const valueFormat = (value: string, decimal: number = 8) => {
   return new BigNumber(value).dividedBy(Math.pow(10, decimal)).toString()
 }
 
+export const tickView = (tick: string | null | undefined) => {
+  if (!tick) return ''
+  const tickName = tick && tick.toUpperCase().includes('(WRAPPED-') ? tick.split('(WRAPPED-')[0] : tick
+  return tickName
+}
+
 /*
  * @param {Array} list
  * @param {string} p
  * @return {Array}
- * @example
+ * @examples
  * getOrderItemStatus({wdoge_tx_block:'0x1234567890abcdef1234567890abcdef12345678', tx_hash: '0x1234567890abcdef1234567890abcdef12345678', block_number: 123456}, 'deposit')
  */
 

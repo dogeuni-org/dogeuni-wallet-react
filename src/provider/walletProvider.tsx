@@ -66,7 +66,7 @@ export const getWalletInfo = async (): Promise<WalletStateType> => {
     const balance: BalanceType = await wallet.getBalance()
     const network = await wallet.getNetwork()
     const [address] = account
-    console.log('Wallet Account Info::Result ===', { account, address, publicKey, balance, network })
+    console.log('💰 Wallet Account Info::Result ===', { account, address, publicKey, balance, network })
     return { account, address, publicKey, balance, network, dogecoinBalance: balance?.confirmed, connected: !!address }
   }
 }
