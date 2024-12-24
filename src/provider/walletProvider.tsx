@@ -1,10 +1,10 @@
 import React, { createContext, useReducer, useContext, useEffect, useRef } from 'react'
-// Extend the Window interface to include the unielon property
 declare global {
   interface Window {
     unielon?: any
   }
 }
+
 import {
   BoxType,
   NftType,
@@ -23,6 +23,7 @@ import {
   PumpTypes,
 } from './types'
 import useBlocknumber from '../hooks/useBlocknumber'
+import { useDogePrice } from '../hooks/useDogePrice'
 
 const initialState: WalletStateType = {
   address: null,
@@ -38,9 +39,8 @@ const initialState: WalletStateType = {
   loading: false,
   sendError: '',
   connected: false,
-  drc20: [],
-  orders: [],
   publicKey: null,
+  currency: 'usd',
 }
 
 const walletReducer = (state: WalletStateType, action: ActionType) => {
@@ -167,6 +167,7 @@ export const WalletProvider = ({ children }: { children: React.ReactNode }) => {
   const [state, dispatch] = useReducer<React.Reducer<WalletStateType, ActionType>>(walletReducer, initialState)
   const action = walletAction(dispatch)
   const { uniBlock, dogeBlock, getBlockNumber } = useBlocknumber()
+  const { price, fee, getPrice, initPriceFee, getFee } = useDogePrice()
   const initRef = useRef<boolean | undefined>(undefined)
   const { setState, accountChange, networkChange } = action as WalletActionType
 
@@ -178,6 +179,7 @@ export const WalletProvider = ({ children }: { children: React.ReactNode }) => {
 
   const initWallet = async () => {
     getBlockNumber()
+    initPriceFee()
     if (!wallet) {
       setState({ installed: false, initialize: false })
     } else {
@@ -200,7 +202,13 @@ export const WalletProvider = ({ children }: { children: React.ReactNode }) => {
     }
   }, [])
 
-  const value: GlobalState = { ...state, ...action, getBlockNumber, uniBlock, dogeBlock }
+  useEffect(() => {
+    if (state.currency) {
+      getPrice(state.currency)
+    }
+  }, [state.currency])
+
+  const value: GlobalState = { ...state, ...action, setState, getBlockNumber, uniBlock, dogeBlock, price, fee, getFee, getPrice, initPriceFee }
   return <UnielonWalletContext.Provider value={value}>{children}</UnielonWalletContext.Provider>
 }
 

@@ -12,7 +12,7 @@ export default defineConfig({
       fileName: (format, entryName) => (format === 'es' ? `${entryName}.js` : `${entryName}.${format}.js`),
     },
     rollupOptions: {
-      external: ['react', 'react-dom'],
+      external: ['react', /^react\/.*/, 'react-dom', /react-dom\/.*/],
       output: {
         globals: {
           react: 'React',

@@ -5,7 +5,13 @@ export interface BlockDataType {
   chain_height: number | null
 }
 
-export default function useBlocknumber() {
+export interface BlockNumberType {
+  uniBlock: number | null
+  dogeBlock: number | null
+  getBlockNumber: () => Promise<BlockDataType | undefined>
+}
+
+export default function useBlocknumber(): BlockNumberType {
   const [uniBlock, setUniBlock] = useState<number>(0)
   const [dogeBlock, setDogeBlock] = useState<number>(0)
 
@@ -19,7 +25,7 @@ export default function useBlocknumber() {
       return { unielon_height, chain_height }
     } catch (error) {
       console.error('Failed to fetch block numbers:', error)
-      return undefined
+      return { unielon_height: null, chain_height: null }
     }
   }, [])
 

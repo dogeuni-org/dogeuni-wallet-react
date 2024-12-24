@@ -95,16 +95,15 @@ export type WalletStateType = {
   connectLoading?: boolean
   loading?: boolean
   sendError?: string
-  drc20?: any[]
-  orders?: any[]
   dogecoinBalance?: string | null
   publicKey?: string | null | undefined
   network?: string | null
   account?: string[]
-  dogeBlock?: number | null | 0
-  uniBlock?: number | null | 0
+  currency?: string
 }
-import { BlockDataType } from '../hooks/useBlocknumber'
+
+import { BlockNumberType } from '../hooks/useBlocknumber'
+import { DogePriceType } from '../hooks/useDogePrice'
 
 export type ActionType = {
   type: string
@@ -133,7 +132,6 @@ export type WalletActionType = {
   signMessage: (msg: string) => Promise<string | null>
   disconnect: () => void
   sendPump: (params: PumpTypes) => Promise<WalletResultType | null>
-  getBlockNumber?: () => Promise<BlockDataType | undefined>
 }
 
 export interface PumpTypes {
@@ -151,4 +149,4 @@ export interface PumpTypes {
   amt1_min?: string
 }
 
-export type GlobalState = WalletStateType & WalletActionType
+export type GlobalState = WalletStateType & WalletActionType & DogePriceType & BlockNumberType

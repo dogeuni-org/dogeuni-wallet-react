@@ -33,7 +33,7 @@ function SendItem(props: any) {
 }
 
 function SendActions() {
-  const { sendBox, sendInscribe, sendExchange, sendTransfer, sendSwap, sendNft, address } = useWallet()
+  const { sendBox, sendInscribe, sendExchange, sendTransfer, sendSwap, sendNft, address, setState } = useWallet()
   return (
     <div style={{ fontSize: 12, width: 800, margin: '0 auto' }}>
       <div>{address}</div>
@@ -49,7 +49,7 @@ function SendActions() {
 
 function App() {
   // const { connect, address, network, signMessage, balance, connected, disconnect } = useWallet()
-  const { connect, address, signMessage, balance, dogeBlock, uniBlock } = useWallet()
+  const { connect, address, signMessage, balance, dogeBlock, uniBlock, price, fee, currency, setState, getPrice } = useWallet()
   const [message, setMessage] = useState<any>(null)
 
   const singMsg = async (msg: string) => {
@@ -60,16 +60,84 @@ function App() {
   return (
     <div style={{ fontSize: 12 }}>
       <div style={{ display: 'flex', background: '#f8f8f8', gap: '10px', alignContent: 'center', justifyContent: 'space-between', padding: 10 }}>
-        <h1 style={{ fontWeight: 900, margin: 0, padding: 0, fontSize: 16, textTransform: 'uppercase' }}>DOGEUNI</h1>
+        <div>
+          <h1 style={{ fontWeight: 900, margin: 0, padding: 0, fontSize: 14, textTransform: 'uppercase' }}>DOGEUNI.WALLET</h1>
+          <div style={{ textTransform: 'uppercase' }}>
+            <p style={{ fontSize: '0.8em' }}>
+              BLOCK_HEIGHT:DOGE{dogeBlock}-DOGEUNI:{uniBlock}
+            </p>
+            <p style={{ fontSize: '0.8em' }}>
+              FEE:low:{valueFormat(fee?.low)} medium:{valueFormat(fee?.medium)} hight:{valueFormat(fee?.hight)}
+            </p>
+          </div>
+        </div>
         <div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 20 }}>
-            <div>
+            <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'center', flexDirection: 'column' }}>
               <p>
-                <span style={{ fontSize: 18, fontWeight: 800 }}>{valueFormat(balance?.confirmed || '0')}</span>
+                <span style={{ fontSize: 16, fontWeight: 800 }}>{valueFormat(balance?.confirmed || '0')}</span>
               </p>
-              <p style={{ fontSize: '0.8em' }}>
-                BLOCK:DOGE{dogeBlock}/UNI:{uniBlock}
-              </p>
+              <div style={{ display: 'flex', gap: 10 }}>
+                <p>
+                  1DOGE={price}
+                  {currency}
+                </p>
+                <select
+                  onChange={(e) => {
+                    console.log(e.target.value)
+                    setState({ currency: e.target.value })
+                    // setState({ currency: e.target.value })
+                  }}
+                  value={currency}
+                >
+                  {[
+                    'USD',
+                    'CNY',
+                    'JPY',
+                    'KRW',
+                    'EUR',
+                    'GBP',
+                    'RUB',
+                    'TRY',
+                    'VND',
+                    'IDR',
+                    'PHP',
+                    'INR',
+                    'ARS',
+                    'SAR',
+                    'AED',
+                    'IQD',
+                    'BND',
+                    'LAK',
+                    'NPR',
+                    'PKR',
+                    'SGD',
+                    'MMK',
+                    'MNT',
+                    'COP',
+                    'CLP',
+                    'VES',
+                    'MXN',
+                    'BRL',
+                    'PEN',
+                    'HNL',
+                    'UYU',
+                    'CHF',
+                    'UAH',
+                    'AUD',
+                    'NZD',
+                    'CAD',
+                    'ZAR',
+                    'ILS',
+                    'TWD',
+                    'HKD',
+                  ].map((currency) => (
+                    <option key={currency} value={currency}>
+                      {currency}
+                    </option>
+                  ))}
+                </select>
+              </div>
             </div>
             {/* {connected && <button onClick={() => disconnect()}>disconnect</button>} */}
             <button onClick={() => connect && connect()}>{address ? address : 'Connect Wallet'}</button>
