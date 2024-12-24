@@ -27,9 +27,8 @@ export function useDogePrice(): DogePriceType {
 
   const getOtherPrice = async (c: string) => {
     try {
-      const res = await fetchRes(DOGE_PRICE_COINGECKO(c))
-      const { dogecoin } = res || {}
-      const result = dogecoin?.[c.toLowerCase()]
+      const res = await fetchRes(DOGE_PRICE_CRYPTO(c))
+      const result = res?.[c]
       setPrice(result)
       return result
     } catch (error) {
@@ -41,8 +40,9 @@ export function useDogePrice(): DogePriceType {
     c = c || 'usd'
     c = c.toUpperCase()
     try {
-      const res = await fetchRes(DOGE_PRICE_CRYPTO(c))
-      const result = res?.[c]
+      const res = await fetchRes(DOGE_PRICE_COINGECKO(c))
+      const { dogecoin } = res || {}
+      const result = dogecoin?.[c.toLowerCase()]
       if (result) {
         setPrice(result)
         return result

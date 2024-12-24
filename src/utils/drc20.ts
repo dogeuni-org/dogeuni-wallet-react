@@ -21,6 +21,13 @@ export const tickView = (tick: string | null | undefined) => {
   return tickName
 }
 
+export const balanceValue = (value: string | number, price: string | number, decimal?: number, pe?: number) => {
+  if (+value === 0 || +price === 0 || !value || !price) return '0.0000'
+  pe = pe || 4
+  decimal = decimal || 8
+  return new BigNumber(value).multipliedBy(price).div(Math.pow(10, decimal)).decimalPlaces(pe, BigNumber.ROUND_DOWN).toFormat()
+}
+
 /*
  * @param {Array} list
  * @param {string} p

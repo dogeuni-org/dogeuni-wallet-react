@@ -11,7 +11,7 @@ export interface BlockNumberType {
   getBlockNumber: () => Promise<BlockDataType | undefined>
 }
 
-export default function useBlocknumber(): BlockNumberType {
+export function useBlocknumber(): BlockNumberType {
   const [uniBlock, setUniBlock] = useState<number>(0)
   const [dogeBlock, setDogeBlock] = useState<number>(0)
 

@@ -33,7 +33,7 @@ function SendItem(props: any) {
 }
 
 function SendActions() {
-  const { sendBox, sendInscribe, sendExchange, sendTransfer, sendSwap, sendNft, address, setState } = useWallet()
+  const { sendBox, sendInscribe, sendExchange, sendTransfer, sendSwap, sendNft, address } = useWallet()
   return (
     <div style={{ fontSize: 12, width: 800, margin: '0 auto' }}>
       <div>{address}</div>
@@ -49,7 +49,7 @@ function SendActions() {
 
 function App() {
   // const { connect, address, network, signMessage, balance, connected, disconnect } = useWallet()
-  const { connect, address, signMessage, balance, dogeBlock, uniBlock, price, fee, currency, setState, getPrice } = useWallet()
+  const { connect, address, signMessage, balance, dogeBlock, uniBlock, price, fee, currency, setState, currencyList } = useWallet()
   const [message, setMessage] = useState<any>(null)
 
   const singMsg = async (msg: string) => {
@@ -86,56 +86,15 @@ function App() {
                   onChange={(e) => {
                     console.log(e.target.value)
                     setState({ currency: e.target.value })
-                    // setState({ currency: e.target.value })
                   }}
                   value={currency}
                 >
-                  {[
-                    'USD',
-                    'CNY',
-                    'JPY',
-                    'KRW',
-                    'EUR',
-                    'GBP',
-                    'RUB',
-                    'TRY',
-                    'VND',
-                    'IDR',
-                    'PHP',
-                    'INR',
-                    'ARS',
-                    'SAR',
-                    'AED',
-                    'IQD',
-                    'BND',
-                    'LAK',
-                    'NPR',
-                    'PKR',
-                    'SGD',
-                    'MMK',
-                    'MNT',
-                    'COP',
-                    'CLP',
-                    'VES',
-                    'MXN',
-                    'BRL',
-                    'PEN',
-                    'HNL',
-                    'UYU',
-                    'CHF',
-                    'UAH',
-                    'AUD',
-                    'NZD',
-                    'CAD',
-                    'ZAR',
-                    'ILS',
-                    'TWD',
-                    'HKD',
-                  ].map((currency) => (
-                    <option key={currency} value={currency}>
-                      {currency}
-                    </option>
-                  ))}
+                  {currencyList &&
+                    currencyList.map((currency) => (
+                      <option key={currency.name} value={currency.name}>
+                        {currency.symbol} : {currency.name}
+                      </option>
+                    ))}
                 </select>
               </div>
             </div>

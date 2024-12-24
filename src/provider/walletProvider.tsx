@@ -22,8 +22,7 @@ import {
   GlobalState,
   PumpTypes,
 } from './types'
-import useBlocknumber from '../hooks/useBlocknumber'
-import { useDogePrice } from '../hooks/useDogePrice'
+import { useBlocknumber, useDogePrice, useLocalStorage } from '../hooks'
 
 const initialState: WalletStateType = {
   address: null,
@@ -41,6 +40,48 @@ const initialState: WalletStateType = {
   connected: false,
   publicKey: null,
   currency: 'usd',
+  currencyList: [
+    { name: 'USD', symbol: '$' },
+    { name: 'CNY', symbol: '¥' },
+    { name: 'JPY', symbol: '¥' },
+    { name: 'KRW', symbol: '₩' },
+    { name: 'EUR', symbol: '€' },
+    { name: 'GBP', symbol: '£' },
+    { name: 'RUB', symbol: '₽' },
+    { name: 'TRY', symbol: '₺' },
+    { name: 'VND', symbol: '₫' },
+    { name: 'IDR', symbol: 'Rp' },
+    { name: 'PHP', symbol: '₱' },
+    { name: 'INR', symbol: '₹' },
+    { name: 'ARS', symbol: '$' },
+    { name: 'SAR', symbol: '﷼' },
+    { name: 'AED', symbol: 'د.إ' },
+    { name: 'IQD', symbol: 'ع.د' },
+    { name: 'BND', symbol: '$' },
+    { name: 'LAK', symbol: '₭' },
+    { name: 'NPR', symbol: '₨' },
+    { name: 'PKR', symbol: '₨' },
+    { name: 'SGD', symbol: '$' },
+    { name: 'MMK', symbol: 'K' },
+    { name: 'MNT', symbol: '₮' },
+    { name: 'COP', symbol: '$' },
+    { name: 'CLP', symbol: '$' },
+    { name: 'VES', symbol: 'Bs.' },
+    { name: 'MXN', symbol: '$' },
+    { name: 'BRL', symbol: 'R$' },
+    { name: 'PEN', symbol: 'S/.' },
+    { name: 'HNL', symbol: 'L' },
+    { name: 'UYU', symbol: '$' },
+    { name: 'CHF', symbol: 'CHF' },
+    { name: 'UAH', symbol: '₴' },
+    { name: 'AUD', symbol: '$' },
+    { name: 'NZD', symbol: '$' },
+    { name: 'CAD', symbol: '$' },
+    { name: 'ZAR', symbol: 'R' },
+    { name: 'ILS', symbol: '₪' },
+    { name: 'TWD', symbol: 'NT$' },
+    { name: 'HKD', symbol: 'HK$' },
+  ],
 }
 
 const walletReducer = (state: WalletStateType, action: ActionType) => {
@@ -80,7 +121,6 @@ export const walletAction = (dispatch: React.Dispatch<ActionType>): WalletAction
       payload,
     })
   }
-
   async function sendTransaction(run: (params: RunActionType) => Promise<WalletResultType | null>, params: RunActionType) {
     const wallet = window?.unielon
     if (!wallet || !run) return null
@@ -168,13 +208,15 @@ export const WalletProvider = ({ children }: { children: React.ReactNode }) => {
   const action = walletAction(dispatch)
   const { uniBlock, dogeBlock, getBlockNumber } = useBlocknumber()
   const { price, fee, getPrice, initPriceFee, getFee } = useDogePrice()
+  const [currency, setCurrency] = useLocalStorage<{ currency: string; time: number }>('currency', { currency: 'usd', time: new Date().getTime() })
   const initRef = useRef<boolean | undefined>(undefined)
   const { setState, accountChange, networkChange } = action as WalletActionType
-
   const { connected } = state
+
   if (typeof window === 'undefined' || !window?.unielon) {
     return <>{children}</>
   }
+
   const wallet = window?.unielon
 
   const initWallet = async () => {
@@ -195,6 +237,7 @@ export const WalletProvider = ({ children }: { children: React.ReactNode }) => {
     if (!initRef.current) {
       initRef.current = true
       initWallet()
+      getPrice(currency?.currency)
     }
     return () => {
       connected && wallet && wallet.removeListener('accountsChanged', accountChange)
@@ -203,8 +246,9 @@ export const WalletProvider = ({ children }: { children: React.ReactNode }) => {
   }, [])
 
   useEffect(() => {
-    if (state.currency) {
+    if (initRef.current && state.currency && state.currency !== currency?.currency) {
       getPrice(state.currency)
+      setCurrency({ currency: state.currency, time: new Date().getTime() })
     }
   }, [state.currency])
 

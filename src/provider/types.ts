@@ -100,6 +100,7 @@ export type WalletStateType = {
   network?: string | null
   account?: string[]
   currency?: string
+  currencyList?: { name: string; symbol: string }[]
 }
 
 import { BlockNumberType } from '../hooks/useBlocknumber'

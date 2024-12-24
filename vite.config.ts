@@ -8,7 +8,7 @@ export default defineConfig({
   build: {
     lib: {
       entry: 'src/lib/index.ts',
-      name: 'UnielonWalletConnectReact',
+      name: '@unielon/wallet-connect-react',
       fileName: (format, entryName) => (format === 'es' ? `${entryName}.js` : `${entryName}.${format}.js`),
     },
     rollupOptions: {
