@@ -1,12 +1,10 @@
-import React, { createContext, useReducer, useContext, useEffect } from 'react'
-
+import React, { createContext, useReducer, useContext, useEffect, useRef } from 'react'
 // Extend the Window interface to include the unielon property
 declare global {
   interface Window {
     unielon?: any
   }
 }
-
 import {
   BoxType,
   NftType,
@@ -22,7 +20,9 @@ import {
   ActionType,
   BalanceType,
   GlobalState,
+  PumpTypes,
 } from './types'
+import useBlocknumber from '../hooks/useBlocknumber'
 
 const initialState: WalletStateType = {
   address: null,
@@ -40,7 +40,6 @@ const initialState: WalletStateType = {
   connected: false,
   drc20: [],
   orders: [],
-  dogecoinBalance: null,
   publicKey: null,
 }
 
@@ -73,7 +72,7 @@ export const getWalletInfo = async (): Promise<WalletStateType> => {
 
 export const walletAction = (dispatch: React.Dispatch<ActionType>): WalletActionType => {
   const wallet = window?.unielon
-  const { sendBox, createSwap, sendDogecoin, sendTrade, sendNft, createLp } = wallet
+  const { sendBox, createSwap, sendDogecoin, sendTrade, sendNft, createLp, createPump } = wallet
 
   function setState(payload: WalletStateType) {
     dispatch({
@@ -156,6 +155,9 @@ export const walletAction = (dispatch: React.Dispatch<ActionType>): WalletAction
     sendStake: async (params: StakeType) => {
       return await sendTransaction(createLp, params)
     },
+    sendPump: async (params: PumpTypes) => {
+      return await createPump(params)
+    },
   }
 }
 
@@ -164,13 +166,18 @@ export const UnielonWalletContext = createContext<GlobalState>(initialState as G
 export const WalletProvider = ({ children }: { children: React.ReactNode }) => {
   const [state, dispatch] = useReducer<React.Reducer<WalletStateType, ActionType>>(walletReducer, initialState)
   const action = walletAction(dispatch)
+  const { uniBlock, dogeBlock, getBlockNumber } = useBlocknumber()
+  const initRef = useRef<boolean | undefined>(undefined)
   const { setState, accountChange, networkChange } = action as WalletActionType
+
   const { connected } = state
   if (typeof window === 'undefined' || !window?.unielon) {
     return <>{children}</>
   }
   const wallet = window?.unielon
+
   const initWallet = async () => {
+    getBlockNumber()
     if (!wallet) {
       setState({ installed: false, initialize: false })
     } else {
@@ -183,14 +190,17 @@ export const WalletProvider = ({ children }: { children: React.ReactNode }) => {
   }
 
   useEffect(() => {
-    initWallet()
+    if (!initRef.current) {
+      initRef.current = true
+      initWallet()
+    }
     return () => {
       connected && wallet && wallet.removeListener('accountsChanged', accountChange)
       connected && wallet && wallet.removeListener('networkChanged', networkChange)
     }
   }, [])
 
-  const value: GlobalState = { ...state, ...action }
+  const value: GlobalState = { ...state, ...action, getBlockNumber, uniBlock, dogeBlock }
   return <UnielonWalletContext.Provider value={value}>{children}</UnielonWalletContext.Provider>
 }
 

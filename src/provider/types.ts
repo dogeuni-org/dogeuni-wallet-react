@@ -3,7 +3,6 @@ export enum InscribeOp {
   MINT = 'mint',
 }
 
-// sendDogecoin = async (toAddress: string, satoshis?: number,
 // for inscribe mint & deoply
 export type InscribeType = {
   p: string
@@ -102,7 +101,10 @@ export type WalletStateType = {
   publicKey?: string | null | undefined
   network?: string | null
   account?: string[]
+  dogeBlock?: number | null | 0
+  uniBlock?: number | null | 0
 }
+import { BlockDataType } from '../hooks/useBlocknumber'
 
 export type ActionType = {
   type: string
@@ -130,6 +132,23 @@ export type WalletActionType = {
   accountChange: (accounts: string[]) => void
   signMessage: (msg: string) => Promise<string | null>
   disconnect: () => void
+  sendPump: (params: PumpTypes) => Promise<WalletResultType | null>
+  getBlockNumber?: () => Promise<BlockDataType | undefined>
+}
+
+export interface PumpTypes {
+  p: 'pump'
+  op: 'deploy' | 'trade'
+  tick?: string
+  amt?: string
+  symbol?: string
+  name?: string
+  doge?: 0 | 1
+  pair_id?: string
+  tick0_id?: string
+  tick1_id?: string
+  amt0?: string
+  amt1_min?: string
 }
 
 export type GlobalState = WalletStateType & WalletActionType

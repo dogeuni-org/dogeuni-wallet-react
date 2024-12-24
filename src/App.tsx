@@ -49,7 +49,7 @@ function SendActions() {
 
 function App() {
   // const { connect, address, network, signMessage, balance, connected, disconnect } = useWallet()
-  const { connect, address, signMessage, balance } = useWallet()
+  const { connect, address, signMessage, balance, dogeBlock, uniBlock } = useWallet()
   const [message, setMessage] = useState<any>(null)
 
   const singMsg = async (msg: string) => {
@@ -60,10 +60,17 @@ function App() {
   return (
     <div style={{ fontSize: 12 }}>
       <div style={{ display: 'flex', background: '#f8f8f8', gap: '10px', alignContent: 'center', justifyContent: 'space-between', padding: 10 }}>
-        <h1 style={{ fontWeight: 800, fontSize: 19, textTransform: 'uppercase' }}>unielon</h1>
+        <h1 style={{ fontWeight: 900, margin: 0, padding: 0, fontSize: 16, textTransform: 'uppercase' }}>DOGEUNI</h1>
         <div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 20 }}>
-            <span style={{ fontSize: 18, fontWeight: 800 }}>{valueFormat(balance?.confirmed || '0')}</span>
+            <div>
+              <p>
+                <span style={{ fontSize: 18, fontWeight: 800 }}>{valueFormat(balance?.confirmed || '0')}</span>
+              </p>
+              <p style={{ fontSize: '0.8em' }}>
+                BLOCK:DOGE{dogeBlock}/UNI:{uniBlock}
+              </p>
+            </div>
             {/* {connected && <button onClick={() => disconnect()}>disconnect</button>} */}
             <button onClick={() => connect && connect()}>{address ? address : 'Connect Wallet'}</button>
             {/* {message} */}

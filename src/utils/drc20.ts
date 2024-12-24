@@ -77,3 +77,24 @@ export const amtToFormat = (amt: string | number, len?: number, decimal?: number
   if (!amt) return '0'
   return new BigNumber(new BigNumber(amt).dividedBy(Math.pow(10, decimal || 8)).toFixed(len || 8)).toFormat()
 }
+
+/*
+
+*/
+export const formatAmount = (amount: number | string | null | undefined, precision: number, decimal?: number) => {
+  if (!amount) return ''
+  decimal = decimal ?? 1
+  const bigAmount = new BigNumber(amount).dividedBy(Math.pow(10, precision ?? 8))
+  const divs = (s: number) => bigAmount.div(s).decimalPlaces(decimal, BigNumber.ROUND_DOWN).toFormat()
+  if (bigAmount.isGreaterThanOrEqualTo(1e9)) {
+    // B for billions
+    return `${divs(1e9)}B` // bigAmount.div(1e9).toFixed(1) + 'B';
+  } else if (bigAmount.isGreaterThanOrEqualTo(1e6)) {
+    // M for millions
+    return `${divs(1e6)}M`
+  } else if (bigAmount.isGreaterThanOrEqualTo(1e3)) {
+    // K for thousands
+    return `${divs(1e3)}K`
+  }
+  return bigAmount.decimalPlaces(decimal, BigNumber.ROUND_DOWN).toFormat() // Return as is if smaller than 1000
+}
