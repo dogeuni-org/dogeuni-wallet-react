@@ -15,13 +15,13 @@ export const valueFormat = (value: string, decimal: number = 8) => {
   return new BigNumber(value).dividedBy(Math.pow(10, decimal)).toString()
 }
 
-export const tickView = (tick: string | null | undefined) => {
+export const getTickName = (tick: string | null | undefined) => {
   if (!tick) return ''
   const tickName = tick && tick.toUpperCase().includes('(WRAPPED-') ? tick.split('(WRAPPED-')[0] : tick
   return tickName
 }
 
-export const balanceValue = (value: string | number, price: string | number, decimal?: number, pe?: number) => {
+export const currencyValue = (value: string | number, price: string | number, decimal?: number, pe?: number): string => {
   if (+value === 0 || +price === 0 || !value || !price) return '0.0000'
   pe = pe || 4
   decimal = decimal || 8
