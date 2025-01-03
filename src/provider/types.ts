@@ -69,7 +69,7 @@ export type BoxType = {
   tick: string
 }
 
-export type RunActionType = InscribeType | TransferType | NftType | BoxType | SwapType | ExchangeType | StakeType
+export type RunActionType = InscribeType | TransferType | NftType | BoxType | SwapType | ExchangeType | StakeType | PumpTypes[] | unknown
 
 export type BalanceType = {
   confirmed: string | null
@@ -101,6 +101,7 @@ export type WalletStateType = {
   account?: string[]
   currency?: string
   currencyList?: { name: string; symbol: string }[]
+  walletLoading?: boolean
 }
 
 import { BlockNumberType } from '../hooks/useBlocknumber'
@@ -132,7 +133,7 @@ export type WalletActionType = {
   accountChange: (accounts: string[]) => void
   signMessage: (msg: string) => Promise<string | null>
   disconnect: () => void
-  sendPump: (params: PumpTypes) => Promise<WalletResultType | null>
+  sendPump: (params: PumpTypes[]) => Promise<WalletResultType | null>
 }
 
 export interface PumpTypes {

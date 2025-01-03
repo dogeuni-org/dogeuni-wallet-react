@@ -10,7 +10,6 @@ export function useUpload() {
     const { file } = arg
     if (!file || loading) return
     const formData = new FormData()
-    formData.append('file', file)
     return new Promise(async (res, rej) => {
       try {
         setLoading(true)

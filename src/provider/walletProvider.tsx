@@ -40,6 +40,7 @@ const initialState: WalletStateType = {
   connected: false,
   publicKey: null,
   currency: 'usd',
+  walletLoading: false,
   currencyList: [
     { name: 'USD', symbol: '$' },
     { name: 'CNY', symbol: '¥' },
@@ -195,8 +196,8 @@ export const walletAction = (dispatch: React.Dispatch<ActionType>): WalletAction
     sendStake: async (params: StakeType) => {
       return await sendTransaction(createLp, params)
     },
-    sendPump: async (params: PumpTypes) => {
-      return await createPump(params)
+    sendPump: async (params: PumpTypes[]) => {
+      return await sendTransaction(createPump, params)
     },
   }
 }
