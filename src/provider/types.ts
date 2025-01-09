@@ -69,7 +69,7 @@ export type BoxType = {
   tick: string
 }
 
-export type RunActionType = InscribeType | TransferType | NftType | BoxType | SwapType | ExchangeType | StakeType | PumpTypes[] | unknown
+export type RunActionType = InscribeType | TransferType | NftType | BoxType | SwapType | ExchangeType | StakeType | PumpType[] | unknown
 
 export type BalanceType = {
   confirmed: string | null
@@ -115,6 +115,24 @@ export type ActionType = {
 export type WalletResultType = {
   tx_hash?: string
   fee_address?: string
+  code?: number
+  data?: Record<string, any>
+  msg?: string | null | undefined
+}
+
+export interface PumpType {
+  p?: 'pump'
+  op?: 'deploy' | 'trade'
+  tick?: string
+  amt?: string
+  symbol?: string
+  name?: string
+  doge?: 0 | 1
+  pair_id?: string
+  tick0_id?: string
+  tick1_id?: string
+  amt0?: string
+  amt1_min?: string
 }
 
 export type WalletActionType = {
@@ -127,28 +145,13 @@ export type WalletActionType = {
   sendBox: (params: BoxType) => Promise<WalletResultType | null>
   sendNft: (params: NftType) => Promise<WalletResultType | null>
   sendStake: (params: StakeType) => Promise<WalletResultType | null>
+  sendPump: (params: PumpType[]) => Promise<WalletResultType | null>
   sendTransaction: (run: (params: RunActionType) => Promise<WalletResultType | null>, params: RunActionType) => void
   getBalance: () => Promise<any>
   networkChange: (network: string) => void
   accountChange: (accounts: string[]) => void
   signMessage: (msg: string) => Promise<string | null>
   disconnect: () => void
-  sendPump: (params: PumpTypes[]) => Promise<WalletResultType | null>
-}
-
-export interface PumpTypes {
-  p: 'pump'
-  op: 'deploy' | 'trade'
-  tick?: string
-  amt?: string
-  symbol?: string
-  name?: string
-  doge?: 0 | 1
-  pair_id?: string
-  tick0_id?: string
-  tick1_id?: string
-  amt0?: string
-  amt1_min?: string
 }
 
 export type GlobalState = WalletStateType & WalletActionType & DogePriceType & BlockNumberType

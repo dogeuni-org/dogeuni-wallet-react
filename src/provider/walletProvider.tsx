@@ -1,4 +1,4 @@
-import React, { createContext, useReducer, useContext, useEffect, useRef } from 'react'
+import React, { createContext, useReducer, useContext, useEffect, useRef, Fragment } from 'react'
 declare global {
   interface Window {
     unielon?: any
@@ -20,7 +20,7 @@ import {
   ActionType,
   BalanceType,
   GlobalState,
-  PumpTypes,
+  PumpType,
 } from './types'
 import { useBlocknumber, useDogePrice, useLocalStorage } from '../hooks'
 
@@ -114,8 +114,7 @@ export const getWalletInfo = async (): Promise<WalletStateType> => {
 
 export const walletAction = (dispatch: React.Dispatch<ActionType>): WalletActionType => {
   const wallet = window?.unielon
-  const { sendBox, createSwap, sendDogecoin, sendTrade, sendNft, createLp, createPump } = wallet
-
+  const { sendBox, createSwap, sendDogecoin, sendTrade, sendNft, createLp, createPump } = wallet || {}
   function setState(payload: WalletStateType) {
     dispatch({
       type: 'SET_STATE',
@@ -196,7 +195,7 @@ export const walletAction = (dispatch: React.Dispatch<ActionType>): WalletAction
     sendStake: async (params: StakeType) => {
       return await sendTransaction(createLp, params)
     },
-    sendPump: async (params: PumpTypes[]) => {
+    sendPump: async (params: PumpType[]) => {
       return await sendTransaction(createPump, params)
     },
   }
@@ -215,7 +214,7 @@ export const WalletProvider = ({ children }: { children: React.ReactNode }) => {
   const { connected } = state
 
   if (typeof window === 'undefined' || !window?.unielon) {
-    return <>{children}</>
+    return <Fragment>{children}</Fragment>
   }
 
   const wallet = window?.unielon

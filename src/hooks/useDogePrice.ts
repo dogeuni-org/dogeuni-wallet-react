@@ -3,13 +3,18 @@ import { useState } from 'react'
 export interface DogePriceType {
   initPriceFee: () => void
   price: number
-  fee: any
+  fee: DogeFeeType
   getFee: () => void
   getPrice: (c?: string) => void
 }
+export interface DogeFeeType {
+  low: string | number
+  hight: string | number
+  medium: string | number
+}
 
 export function useDogePrice(): DogePriceType {
-  const [fee, setFee] = useState({})
+  const [fee, setFee] = useState<DogeFeeType>({ low: 0, hight: 0, medium: 0 })
   const [price, setPrice] = useState(0)
 
   const DOGE_PRICE_COINGECKO = (coin: string) => `https://api.coingecko.com/api/v3/simple/price?ids=dogecoin&vs_currencies=${coin}`
@@ -21,7 +26,7 @@ export function useDogePrice(): DogePriceType {
       const result = await fetch(url, config || {}).then((res) => res.json())
       return result
     } catch (error) {
-      console.log(error)
+      return error
     }
   }
 

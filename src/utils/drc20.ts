@@ -2,7 +2,7 @@ import BigNumber from 'bignumber.js'
 
 export const drcToDec = (drc: number | string | undefined | null | '', decimal: number = 8) => {
   if (!drc) return ''
-  return new BigNumber(drc).div(Math.pow(10, decimal)).decimalPlaces(decimal, BigNumber.ROUND_DOWN).toFormat()
+  return new BigNumber(drc).dividedBy(Math.pow(10, decimal)).decimalPlaces(decimal, BigNumber.ROUND_DOWN).toFormat()
 }
 
 export const decToDrc = (drc: number | string | undefined | null | '', decimal: number = 8) => {
@@ -10,7 +10,7 @@ export const decToDrc = (drc: number | string | undefined | null | '', decimal: 
   return new BigNumber(drc).multipliedBy(Math.pow(10, decimal)).decimalPlaces(0, BigNumber.ROUND_DOWN).toString()
 }
 
-export const valueFormat = (value: string, decimal: number = 8) => {
+export const valueFormat = (value: string | number, decimal: number = 8) => {
   if (!value) return '0'
   return new BigNumber(value).dividedBy(Math.pow(10, decimal)).toString()
 }
