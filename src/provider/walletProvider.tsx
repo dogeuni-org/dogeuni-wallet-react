@@ -23,8 +23,49 @@ import {
   PumpType,
 } from './types'
 import { useBlocknumber, useDogePrice, useLocalStorage } from '../hooks'
-
-const initialState: WalletStateType = {
+export const currencyList = [
+  { name: 'USD', symbol: '$' },
+  { name: 'CNY', symbol: '¥' },
+  { name: 'JPY', symbol: '¥' },
+  { name: 'KRW', symbol: '₩' },
+  { name: 'EUR', symbol: '€' },
+  { name: 'GBP', symbol: '£' },
+  { name: 'RUB', symbol: '₽' },
+  { name: 'TRY', symbol: '₺' },
+  { name: 'VND', symbol: '₫' },
+  { name: 'IDR', symbol: 'Rp' },
+  { name: 'PHP', symbol: '₱' },
+  { name: 'INR', symbol: '₹' },
+  { name: 'ARS', symbol: '$' },
+  { name: 'SAR', symbol: '﷼' },
+  { name: 'AED', symbol: 'د.إ' },
+  { name: 'IQD', symbol: 'ع.د' },
+  { name: 'BND', symbol: '$' },
+  { name: 'LAK', symbol: '₭' },
+  { name: 'NPR', symbol: '₨' },
+  { name: 'PKR', symbol: '₨' },
+  { name: 'SGD', symbol: '$' },
+  { name: 'MMK', symbol: 'K' },
+  { name: 'MNT', symbol: '₮' },
+  { name: 'COP', symbol: '$' },
+  { name: 'CLP', symbol: '$' },
+  { name: 'VES', symbol: 'Bs.' },
+  { name: 'MXN', symbol: '$' },
+  { name: 'BRL', symbol: 'R$' },
+  { name: 'PEN', symbol: 'S/.' },
+  { name: 'HNL', symbol: 'L' },
+  { name: 'UYU', symbol: '$' },
+  { name: 'CHF', symbol: 'CHF' },
+  { name: 'UAH', symbol: '₴' },
+  { name: 'AUD', symbol: '$' },
+  { name: 'NZD', symbol: '$' },
+  { name: 'CAD', symbol: '$' },
+  { name: 'ZAR', symbol: 'R' },
+  { name: 'ILS', symbol: '₪' },
+  { name: 'TWD', symbol: 'NT$' },
+  { name: 'HKD', symbol: 'HK$' },
+]
+export const initialState: WalletStateType = {
   address: null,
   balance: {
     confirmed: null,
@@ -41,48 +82,8 @@ const initialState: WalletStateType = {
   publicKey: null,
   currency: 'usd',
   walletLoading: false,
-  currencyList: [
-    { name: 'USD', symbol: '$' },
-    { name: 'CNY', symbol: '¥' },
-    { name: 'JPY', symbol: '¥' },
-    { name: 'KRW', symbol: '₩' },
-    { name: 'EUR', symbol: '€' },
-    { name: 'GBP', symbol: '£' },
-    { name: 'RUB', symbol: '₽' },
-    { name: 'TRY', symbol: '₺' },
-    { name: 'VND', symbol: '₫' },
-    { name: 'IDR', symbol: 'Rp' },
-    { name: 'PHP', symbol: '₱' },
-    { name: 'INR', symbol: '₹' },
-    { name: 'ARS', symbol: '$' },
-    { name: 'SAR', symbol: '﷼' },
-    { name: 'AED', symbol: 'د.إ' },
-    { name: 'IQD', symbol: 'ع.د' },
-    { name: 'BND', symbol: '$' },
-    { name: 'LAK', symbol: '₭' },
-    { name: 'NPR', symbol: '₨' },
-    { name: 'PKR', symbol: '₨' },
-    { name: 'SGD', symbol: '$' },
-    { name: 'MMK', symbol: 'K' },
-    { name: 'MNT', symbol: '₮' },
-    { name: 'COP', symbol: '$' },
-    { name: 'CLP', symbol: '$' },
-    { name: 'VES', symbol: 'Bs.' },
-    { name: 'MXN', symbol: '$' },
-    { name: 'BRL', symbol: 'R$' },
-    { name: 'PEN', symbol: 'S/.' },
-    { name: 'HNL', symbol: 'L' },
-    { name: 'UYU', symbol: '$' },
-    { name: 'CHF', symbol: 'CHF' },
-    { name: 'UAH', symbol: '₴' },
-    { name: 'AUD', symbol: '$' },
-    { name: 'NZD', symbol: '$' },
-    { name: 'CAD', symbol: '$' },
-    { name: 'ZAR', symbol: 'R' },
-    { name: 'ILS', symbol: '₪' },
-    { name: 'TWD', symbol: 'NT$' },
-    { name: 'HKD', symbol: 'HK$' },
-  ],
+  currentCurrency: { name: 'USD', symbol: '$' },
+  currencyList,
 }
 
 const walletReducer = (state: WalletStateType, action: ActionType) => {
@@ -170,6 +171,11 @@ export const walletAction = (dispatch: React.Dispatch<ActionType>): WalletAction
     },
     disconnect: async () => {
       setState(initialState)
+    },
+    currencyChange: async (currency: string, cb: (v: string) => void) => {
+      currency = currency.toLowerCase()
+      setState({ currency, currentCurrency: currencyList.find((item) => item.name === currency.toUpperCase()) })
+      cb(currency)
     },
     signMessage: async (msg: string): Promise<string | null> => {
       return await wallet.signMessage(msg)

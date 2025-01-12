@@ -1,13 +1,13 @@
 {
   "name": "@unielon/wallet-connect-react",
   "private": false,
-  "version": "0.0.24",
+  "version": "0.0.27",
   "type": "module",
   "author": "saul <ninasaul@protonmail.com>",
   "license": "MIT",
   "keywords": [
-    "unielon",
-    "unielon wallet connect",
+    "dogeuni",
+    "dogeuni & unielon & wallet connect",
     "drc20",
     "dogecoin",
     "dogecoin wallet connect"
@@ -19,7 +19,7 @@
     "url": "https://github.com/unielon-org/unielon-wallet-react",
     "type": "git"
   },
-  "homepage": "https://unielon.com",
+  "homepage": "https://dogeuni.com",
   "description": "unielon wallet js sdk rom react provider、swap pools base action, base use for React",
   "main": "dist/index.js",
   "module": "dist/index.esm.js",

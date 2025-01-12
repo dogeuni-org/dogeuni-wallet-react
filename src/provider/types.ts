@@ -85,6 +85,11 @@ export type WalletInfoType = {
   account: string[]
 }
 
+export interface CurrencyItemType {
+  name: string
+  symbol: string
+}
+
 export type WalletStateType = {
   address?: string | null
   balance?: BalanceType | null
@@ -100,11 +105,13 @@ export type WalletStateType = {
   network?: string | null
   account?: string[]
   currency?: string
-  currencyList?: { name: string; symbol: string }[]
+  currentCurrency?: CurrencyItemType
+  currencyList?: CurrencyItemType[]
   walletLoading?: boolean
 }
 
 import { BlockNumberType } from '../hooks/useBlocknumber'
+
 import { DogePriceType } from '../hooks/useDogePrice'
 
 export type ActionType = {
@@ -152,6 +159,7 @@ export type WalletActionType = {
   accountChange: (accounts: string[]) => void
   signMessage: (msg: string) => Promise<string | null>
   disconnect: () => void
+  currencyChange: (currency: string, callback: (currency: string) => void) => void
 }
 
 export type GlobalState = WalletStateType & WalletActionType & DogePriceType & BlockNumberType

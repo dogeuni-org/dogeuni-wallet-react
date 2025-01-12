@@ -7,7 +7,7 @@ export const drcToDec = (drc: number | string | undefined | null | '', decimal: 
 
 export const decToDrc = (drc: number | string | undefined | null | '', decimal: number = 8) => {
   if (!drc) return ''
-  return new BigNumber(drc).multipliedBy(Math.pow(10, decimal)).decimalPlaces(0, BigNumber.ROUND_DOWN).toString()
+  return new BigNumber(drc).multipliedBy(Math.pow(10, decimal)).toFixed(0)
 }
 
 export const valueFormat = (value: string | number, decimal: number = 8) => {
@@ -18,7 +18,7 @@ export const valueFormat = (value: string | number, decimal: number = 8) => {
 export const getTickName = (tick: string | null | undefined) => {
   if (!tick) return ''
   const tickName = tick && tick.toUpperCase().includes('(WRAPPED-') ? tick.split('(WRAPPED-')[0] : tick
-  return tickName
+  return tickName === 'WDOGE' ? 'DOGE' : tickName
 }
 
 export const currencyValue = (value: string | number, price: string | number, decimal?: number, pe?: number): string => {
