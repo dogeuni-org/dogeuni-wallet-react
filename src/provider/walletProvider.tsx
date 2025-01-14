@@ -209,7 +209,12 @@ export const walletAction = (dispatch: React.Dispatch<ActionType>): WalletAction
 
 export const UnielonWalletContext = createContext<GlobalState>(initialState as GlobalState)
 
-export const WalletProvider = ({ children }: { children: React.ReactNode }) => {
+interface WalletProviderProps {
+  children: React.ReactNode
+  blockRefresh?: number
+}
+
+export const WalletProvider = ({ children, blockRefresh }: WalletProviderProps) => {
   const [state, dispatch] = useReducer<React.Reducer<WalletStateType, ActionType>>(walletReducer, initialState)
   const action = walletAction(dispatch)
   const { uniBlock, dogeBlock, getBlockNumber } = useBlocknumber()
@@ -240,14 +245,17 @@ export const WalletProvider = ({ children }: { children: React.ReactNode }) => {
   }
 
   useEffect(() => {
+    let timer = null
     if (!initRef.current) {
       initRef.current = true
       initWallet()
       getPrice(currency?.currency)
+      timer = setInterval(() => getBlockNumber(), blockRefresh || 1000 * 60)
     }
     return () => {
       connected && wallet && wallet.removeListener('accountsChanged', accountChange)
       connected && wallet && wallet.removeListener('networkChanged', networkChange)
+      timer && clearInterval(timer)
     }
   }, [])
 

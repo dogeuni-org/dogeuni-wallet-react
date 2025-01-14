@@ -1,7 +1,7 @@
 {
   "name": "@unielon/wallet-connect-react",
   "private": false,
-  "version": "0.0.27",
+  "version": "0.0.28",
   "type": "module",
   "author": "saul <ninasaul@protonmail.com>",
   "license": "MIT",
