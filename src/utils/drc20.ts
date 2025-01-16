@@ -1,13 +1,24 @@
 import BigNumber from 'bignumber.js'
 
-export const drcToDec = (drc: number | string | undefined | null | '', decimal: number = 8) => {
+export const drcToDec = (drc: number | string | undefined | null | '', places?: number, decimal?: number) => {
   if (!drc) return ''
-  return new BigNumber(drc).dividedBy(Math.pow(10, decimal)).decimalPlaces(decimal, BigNumber.ROUND_DOWN).toFormat()
+  return new BigNumber(drc)
+    .dividedBy(Math.pow(10, decimal || 8))
+    .decimalPlaces(decimal || 8, BigNumber.ROUND_DOWN)
+    .toFormat(places || 0)
+}
+
+export const drcToView = (drc: number | string | undefined | null | '', des?: number, decimal?: number) => {
+  if (!drc) return ''
+  return new BigNumber(drc)
+    .dividedBy(Math.pow(10, decimal || 8))
+    .decimalPlaces(decimal || 8, BigNumber.ROUND_DOWN)
+    .toFormat(des || 4)
 }
 
 export const decToDrc = (drc: number | string | undefined | null | '', decimal: number = 8) => {
   if (!drc) return ''
-  return new BigNumber(drc).multipliedBy(Math.pow(10, decimal)).toFixed(0)
+  return new BigNumber(drc).multipliedBy(Math.pow(10, decimal)).integerValue(BigNumber.ROUND_DOWN).toString()
 }
 
 export const valueFormat = (value: string | number, decimal: number = 8) => {
