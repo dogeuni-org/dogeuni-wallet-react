@@ -16,6 +16,22 @@ export const drcToView = (drc: number | string | undefined | null | '', des?: nu
     .toFormat(des || 4)
 }
 
+export const amtToView = (value: string | number, decimal?: number, len?: number): string => {
+  const bn = new BigNumber(value).dividedBy(Math.pow(10, len || 8))
+  const d = decimal || 4
+  if (bn.isLessThan(1000)) {
+    return bn.toFormat()
+  } else if (bn.isLessThan(1e6)) {
+    return `${bn.dividedBy(1e3).toFormat(d)}K`
+  } else if (bn.isLessThan(1e9)) {
+    return `${bn.dividedBy(1e6).toFormat(d)}M`
+  } else if (bn.isLessThan(1e12)) {
+    return `${bn.dividedBy(1e9).toFormat(d)}B`
+  } else {
+    return `${bn.dividedBy(1e12).toFormat(d)}T`
+  }
+}
+
 export const decToDrc = (drc: number | string | undefined | null | '', decimal: number = 8) => {
   if (!drc) return ''
   return new BigNumber(drc).multipliedBy(Math.pow(10, decimal)).integerValue(BigNumber.ROUND_DOWN).toString()
