@@ -84,6 +84,7 @@ export const initialState: WalletStateType = {
   walletLoading: false,
   currentCurrency: { name: 'USD', symbol: '$' },
   currencyList,
+  userInfo: {},
 }
 
 const walletReducer = (state: WalletStateType, action: ActionType) => {

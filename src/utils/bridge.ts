@@ -4,7 +4,15 @@ export interface Response<T> {
   data: null | Record<string, T>
 }
 
-class Bridge {
+interface ConnectType<T> {
+  data: Record<string, unknown>
+  onConnect?: (data: string) => void
+  onOpen?: (data: string) => void
+  onMessage: (data: T | any) => void
+  onError: (data: Response<unknown>) => void
+}
+
+export class Bridge {
   private token: string | null = null
   private eventSource: EventSource | null = null
   private BRIDGE_URL: string = 'https://bridge.unielon.com'
@@ -17,42 +25,43 @@ class Bridge {
     return token
   }
 
-  async connect<T extends Record<string, unknown>>(data: T = {} as T, callback?: (data: string) => void): Promise<void> {
+  async connect<T>({ data, onConnect, onOpen, onError, onMessage }: ConnectType<T>) {
     const currentToken = await this.getToken({ client: 'pump', ...data })
     this.token = currentToken
-    callback && callback(currentToken)
+    onConnect && onConnect(currentToken)
 
-    new Promise((resolve, reject) => {
-      this.eventSource = new EventSource(`${this.BRIDGE_URL}/connect?token=${this.token}`)
-      // Close the connection after 1 minute
-      const timer = setTimeout(() => {
-        this.eventSource && this.eventSource.close()
-      }, 1000 * 60)
+    this.eventSource = new EventSource(`${this.BRIDGE_URL}/connect?token=${this.token}`)
+    // Close the connection after 1 minute
+    const timer = setTimeout(() => {
+      this.eventSource && this.eventSource.close()
+    }, 1000 * 60)
 
-      this.eventSource.onmessage = (event: any) => {
-        console.log(`event.data::`, event)
-        try {
-          if (event.data && typeof event.data === 'string') {
-            const res = JSON.parse(event.data)
-            if (res?.data && res?.code === 200) {
-              resolve(res?.data)
-            }
+    this.eventSource.onmessage = (event: any) => {
+      console.log(`event.data::`, event)
+      try {
+        if (event.data && typeof event.data === 'string') {
+          const res = JSON.parse(event.data)
+          console.log(`event.data::`, res)
+          if (res?.data && res?.code === 200) {
+            console.log(`event.data::`, res.data)
+            onMessage(res?.data)
           }
-        } catch (error) {
-          reject(error)
         }
+      } catch (error) {
+        onError && onError({ code: 500, message: 'Error parsing event data', data: null })
       }
+    }
 
-      this.eventSource.onerror = (error) => {
-        reject(error)
-        clearTimeout(timer)
-        this.eventSource?.close()
-      }
+    this.eventSource.onerror = () => {
+      clearTimeout(timer)
+      onError && onError({ code: 500, message: 'Error connecting to the server', data: null })
+      this.eventSource?.close()
+    }
 
-      this.eventSource.onopen = (open: any) => {
-        console.log(`connect open::`, open)
-      }
-    })
+    this.eventSource.onopen = (open: any) => {
+      onOpen && onOpen(open)
+      console.log(`connect open::`, open)
+    }
   }
 }
 

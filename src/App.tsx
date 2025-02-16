@@ -1,7 +1,7 @@
 import { useWallet } from './provider'
 import { useState } from 'react'
 import './App.css'
-import { valueFormat } from './utils'
+import { bridge, valueFormat } from './utils'
 
 function SendItem(props: any) {
   const { onSubmit, title, eg } = props
@@ -49,7 +49,7 @@ function SendActions() {
 
 function App() {
   // const { connect, address, network, signMessage, balance, connected, disconnect } = useWallet()
-  const { connect, address, signMessage, balance, dogeBlock, uniBlock, price, fee, currency, setState, currencyList } = useWallet()
+  const { connect, address, signMessage, balance, dogeBlock, uniBlock, price, fee, currency, setState, currencyList, userInfo } = useWallet()
   const [message, setMessage] = useState<any>(null)
 
   const singMsg = async (msg: string) => {
@@ -100,6 +100,25 @@ function App() {
             </div>
             {/* {connected && <button onClick={() => disconnect()}>disconnect</button>} */}
             <button onClick={() => connect && connect()}>{address ? address : 'Connect Wallet'}</button>
+            <button
+              onClick={async () => {
+                bridge.connect({
+                  data: { client: 'test_wallet', callback_url: window.location.href },
+                  onConnect: (token: string) => {
+                    window.open(`https://t.me/dogepumplolbot?start=${token}`, '_blank')
+                  },
+                  onMessage: (res: any) => {
+                    console.log(`data::`, res)
+                    setState({ userInfo: res || {} })
+                  },
+                  onError: (error: any) => {
+                    console.error('Connection error:', error)
+                  },
+                })
+              }}
+            >
+              {userInfo?.username || 'connect tg'}
+            </button>
             {/* {message} */}
             {/* <button onClick={() => singMsg('hello unielon wallet')}>Sign Message</button> */}
           </div>

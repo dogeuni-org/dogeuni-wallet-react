@@ -17,6 +17,7 @@ export const drcToView = (drc: number | string | undefined | null | '', des?: nu
 }
 
 export const amtToView = (value: string | number, decimal?: number, len?: number): string => {
+  if (!value) return '0.0000'
   const bn = new BigNumber(value).dividedBy(Math.pow(10, len || 8))
   const d = decimal || 4
   if (bn.isLessThan(1000)) {
@@ -42,10 +43,10 @@ export const valueFormat = (value: string | number, decimal: number = 8) => {
   return new BigNumber(value).dividedBy(Math.pow(10, decimal)).toString()
 }
 
-export const getTickName = (tick: string | null | undefined) => {
+export const getTickName = (tick: string | null | undefined, doge: 0 | 1 = 1) => {
   if (!tick) return ''
   const tickName = tick && tick.toUpperCase().includes('(WRAPPED-') ? tick.split('(WRAPPED-')[0] : tick
-  return tickName === 'WDOGE' ? 'DOGE' : tickName
+  return tickName === 'WDOGE' ? (doge === 1 ? 'DOGE' : 'WDOGE') : tickName
 }
 
 export const currencyValue = (value: string | number, price: string | number, decimal?: number, pe?: number): string => {

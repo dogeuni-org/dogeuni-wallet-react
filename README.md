@@ -1,6 +1,6 @@
-# Unielon Wallet browser extension & React Provider
+# Dogeuni Wallet browser extension & React Provider
 
-Powering the future for Unielon DRC20 Wallet.
+Powering the future for Dogeuni DRC20 Wallet.
 Connecting the Unielon Wallet to the base library through React Provider.
 
 ## Installation
@@ -17,16 +17,16 @@ npm i @unielon/wallet-connect-react --save
 
 ```jsx
 /* App.jsx */
-
-import { WalletConnect } from 'unielon-react-react'
+import { WalletConnect } from '@unielon/wallet-connect-react'
 
 export default App(){
   return (
-    <WalletProvider>
+    <WalletProvider blockRefresh={5000}>
     ...
     </WalletProvider>
   )
 }
+
 
 ```
 
@@ -34,12 +34,10 @@ export default App(){
 
 ```jsx
 /* ConnectButton.jsx */
-
 import { useWallet } from './provider'
 
 export default function ConnectButton() {
   const { connect, connectLoading, address } = useWallet()
-  console.log(wallet)
-  return <button onClick={() => wallet?.connect()}>{connectLoading ? 'connecting...' : address ? wallet.address : 'Connect Wallet'}</button>
+  return <button onClick={() => connect()}>{connectLoading ? 'connecting...' : address || 'Connect Wallet'}</button>
 }
 ```

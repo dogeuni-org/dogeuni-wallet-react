@@ -20,10 +20,21 @@ export enum SwapOp {
 
 // for swap & pools create & remove
 export type SwapType = {
-  p: 'wdoge' | 'drc-20'
-  op: SwapOp
-  tick: string
-  amt: string
+  p: 'wdoge' | 'drc-20' | 'pair-v1' | 'pair-v2' | string
+  op: 'swap' | 'trade' | 'create' | 'remove' | 'add' | string
+  tick?: string
+  amt?: string
+  pair_id?: string
+  amt0?: string
+  amt1?: string
+  amt0_min?: string
+  amt1_min?: string
+  doge?: 0 | 1 | number
+  tick0_id?: string
+  tick1_id?: string
+  tick0?: string
+  tick1?: string
+  liquidity?: string
 }
 
 // for nfts mint & deploy
@@ -90,6 +101,13 @@ export interface CurrencyItemType {
   symbol: string
 }
 
+export interface UserInfoType {
+  bio?: string | null
+  profile_photo?: string | null
+  username?: string | null
+  address?: string | null
+}
+
 export type WalletStateType = {
   address?: string | null
   balance?: BalanceType | null
@@ -108,6 +126,7 @@ export type WalletStateType = {
   currentCurrency?: CurrencyItemType
   currencyList?: CurrencyItemType[]
   walletLoading?: boolean
+  userInfo?: UserInfoType
 }
 
 import { BlockNumberType } from '../hooks/useBlocknumber'
