@@ -116,8 +116,7 @@ export type WalletStateType = {
   connected?: boolean
   sendLoading?: boolean
   connectLoading?: boolean
-  loading?: boolean
-  sendError?: string
+  sendError?: string | null | Record<string, any> | null | undefined
   dogecoinBalance?: string | null
   publicKey?: string | null | undefined
   network?: string | null
@@ -125,7 +124,6 @@ export type WalletStateType = {
   currency?: string
   currentCurrency?: CurrencyItemType
   currencyList?: CurrencyItemType[]
-  walletLoading?: boolean
   userInfo?: UserInfoType
 }
 
@@ -142,13 +140,13 @@ export type WalletResultType = {
   tx_hash?: string
   fee_address?: string
   code?: number
-  data?: Record<string, any>
+  data?: Record<string, any> | null | undefined
   msg?: string | null | undefined
 }
 
 export interface PumpType {
   p?: 'pump'
-  op?: 'deploy' | 'trade'
+  op?: 'deploy' | 'trade' | 'swap' | 'add' | 'remove'
   tick?: string
   amt?: string
   symbol?: string

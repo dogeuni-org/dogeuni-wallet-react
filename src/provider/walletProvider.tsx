@@ -76,12 +76,10 @@ export const initialState: WalletStateType = {
   account: [],
   sendLoading: false,
   connectLoading: false,
-  loading: false,
-  sendError: '',
+  sendError: null,
   connected: false,
   publicKey: null,
   currency: 'usd',
-  walletLoading: false,
   currentCurrency: { name: 'USD', symbol: '$' },
   currencyList,
   userInfo: {},
@@ -123,19 +121,25 @@ export const walletAction = (dispatch: React.Dispatch<ActionType>): WalletAction
       payload,
     })
   }
+
   async function sendTransaction(run: (params: RunActionType) => Promise<WalletResultType | null>, params: RunActionType) {
     const wallet = window?.unielon
     if (!wallet || !run) return null
     try {
-      setState({ loading: true })
-      return await run(params)
+      setState({ sendLoading: true, sendError: null })
+      const result = await run(params)
+      const { code, msg, data } = result || {}
+      if (code !== 200 && data?.tx_hash) {
+        setState({ sendError: msg || 'send transaction failed' })
+      }
+      return result
     } catch (error: any) {
       setState({
         sendError: error.message,
       })
       return null
     } finally {
-      setState({ loading: false })
+      setState({ sendLoading: true })
     }
   }
 

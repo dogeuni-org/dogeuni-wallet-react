@@ -33,7 +33,7 @@ function SendItem(props: any) {
 }
 
 function SendActions() {
-  const { sendBox, sendInscribe, sendExchange, sendTransfer, sendSwap, sendNft, address } = useWallet()
+  const { sendBox, sendInscribe, sendExchange, sendTransfer, sendSwap, sendNft, address, sendPump } = useWallet()
   return (
     <div style={{ fontSize: 12, width: 800, margin: '0 auto' }}>
       <div>{address}</div>
@@ -43,6 +43,7 @@ function SendActions() {
       <SendItem key={4} onSubmit={sendTransfer} title="sendTransfer" />
       <SendItem key={5} onSubmit={sendBox} title="sendBox" />
       <SendItem key={22} onSubmit={sendNft} title="sendNfts" />
+      <SendItem key={22} onSubmit={sendPump} title="sendPump" />
     </div>
   )
 }
