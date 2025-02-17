@@ -81,6 +81,7 @@ export default function ConnectButton() {
 | `sendNft`        | `function` | `null`  | NFT exchange                 |
 | `sendStake`      | `function` | `null`  | stake                        |
 | `sendPump`       | `function` | `null`  | pump swap & transfer         |
+| `sendDoge`       | `function` | `null`  | send doge                    |
 | `getBalance`     | `function` | `null`  | get Dogecoin balance         |
 | `networkChange`  | `function` | `null`  | current Dogecoin network     |
 | `accountChange`  | `function` | `null`  | address account change       |
