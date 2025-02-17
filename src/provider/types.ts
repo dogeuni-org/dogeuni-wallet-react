@@ -82,7 +82,7 @@ export type BoxType = {
 
 export type DogeType = {
   toAddress: string
-  sendAmount: string
+  sendAmount: number
 }
 
 export type RunActionType = InscribeType | TransferType | NftType | BoxType | SwapType | ExchangeType | StakeType | PumpType[] | unknown

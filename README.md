@@ -69,7 +69,7 @@ export default function ConnectButton() {
 
 ### wallet actions
 
-| action           | type       | default | about                        |
+| action           | type       | default | description                  |
 | ---------------- | ---------- | ------- | ---------------------------- |
 | `sendTransfer`   | `function` | `null`  | base wallet action           |
 | `connect`        | `function` | `null`  | connect to the wallet        |
