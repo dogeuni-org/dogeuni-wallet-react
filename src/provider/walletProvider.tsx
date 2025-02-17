@@ -21,6 +21,7 @@ import {
   BalanceType,
   GlobalState,
   PumpType,
+  DogeType,
 } from './types'
 import { useBlocknumber, useDogePrice, useLocalStorage } from '../hooks'
 export const currencyList = [
@@ -114,7 +115,7 @@ export const getWalletInfo = async (): Promise<WalletStateType> => {
 
 export const walletAction = (dispatch: React.Dispatch<ActionType>): WalletActionType => {
   const wallet = window?.unielon
-  const { sendBox, createSwap, sendDogecoin, sendTrade, sendNft, createLp, createPump } = wallet || {}
+  const { sendBox, createSwap, sendDogecoin, sendTrade, sendNft, createLp, createPump, sendDoge } = wallet || {}
   function setState(payload: WalletStateType) {
     dispatch({
       type: 'SET_STATE',
@@ -205,6 +206,9 @@ export const walletAction = (dispatch: React.Dispatch<ActionType>): WalletAction
     },
     sendStake: async (params: StakeType) => {
       return await sendTransaction(createLp, params)
+    },
+    sendDoge: async (params: DogeType[]) => {
+      return await sendTransaction(sendDoge, params)
     },
     sendPump: async (params: PumpType[]) => {
       return await sendTransaction(createPump, params)

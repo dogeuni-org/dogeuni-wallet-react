@@ -80,6 +80,11 @@ export type BoxType = {
   tick: string
 }
 
+export type DogeType = {
+  toAddress: string
+  sendAmount: string
+}
+
 export type RunActionType = InscribeType | TransferType | NftType | BoxType | SwapType | ExchangeType | StakeType | PumpType[] | unknown
 
 export type BalanceType = {
@@ -170,6 +175,7 @@ export type WalletActionType = {
   sendNft: (params: NftType) => Promise<WalletResultType | null>
   sendStake: (params: StakeType) => Promise<WalletResultType | null>
   sendPump: (params: PumpType[]) => Promise<WalletResultType | null>
+  sendDoge: (params: DogeType[]) => Promise<WalletResultType | null>
   sendTransaction: (run: (params: RunActionType) => Promise<WalletResultType | null>, params: RunActionType) => void
   getBalance: () => Promise<any>
   networkChange: (network: string) => void
