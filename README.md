@@ -6,18 +6,18 @@ Connecting the Unielon Wallet to the base library through React Provider.
 ## Installation
 
 ```shell
-yarn add @dogeuni/wallet-connect-react
+yarn add @dogeuni-org/wallet-connect-react
 ```
 
 ```shell
-npm i @dogeuni/wallet-connect-react --save
+npm i @dogeuni-org/wallet-connect-react --save
 ```
 
 ## Initialize
 
 ```jsx
 /* App.jsx */
-import { WalletConnect } from '@dogeuni/wallet-connect-react'
+import { WalletConnect } from '@dogeuni-org/wallet-connect-react'
 
 export default App(){
   return (
