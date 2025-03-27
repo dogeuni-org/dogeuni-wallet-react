@@ -6,12 +6,10 @@
   "author": "saul0000 <ninasaul@protonmail.com>",
   "license": "MIT",
   "keywords": [
-    "dogeuni",
-    "dogeuni & wallet connect",
     "drc20",
     "dogecoin",
-    "dogepump.ai",
     "dogepump",
+    "dogepump.ai",
     "dogecoin wallet connect",
     "dogeuni react provider"
   ],
