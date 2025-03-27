@@ -10,7 +10,10 @@
     "dogeuni & wallet connect",
     "drc20",
     "dogecoin",
-    "dogecoin wallet connect"
+    "dogepump.ai",
+    "dogepump",
+    "dogecoin wallet connect",
+    "dogeuni react provider"
   ],
   "bugs": {
     "url": "https://github.com/unielon-org/unielon-wallet-react/issues"
