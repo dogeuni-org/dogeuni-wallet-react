@@ -18,7 +18,7 @@
   },
   "repository": {
     "url": "https://github.com/dogeuni-org/dogeuni-wallet-react.git",
-    "type": "git"
+    "type": "https"
   },
   "homepage": "https://dogeuni.com",
   "description": "dogeuni wallet js sdk rom react provider、swap pools base action, base use for React",
@@ -54,9 +54,6 @@
     "index.js",
     "README.md"
   ],
-  "publishConfig": {
-    "registry": "https://github.com/dogeuni-org/dogeuni-wallet-react.git"
-  },
   "devDependencies": {
     "@types/react": "^18.2.66",
     "@types/react-dom": "^18.2.22",
