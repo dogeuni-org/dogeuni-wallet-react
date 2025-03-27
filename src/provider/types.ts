@@ -163,6 +163,18 @@ export interface PumpType {
   amt0?: string
   amt1_min?: string
 }
+export interface ToSignInputsType {
+  index: number
+  address: string
+  publicKey: string
+  sighashTypes?: number[]
+  disableTweakSigner?: boolean
+  useTweakedSigner?: boolean
+}
+export interface PsbtOptionsType {
+  autoFinalized?: boolean
+  toSignInputs: ToSignInputsType[]
+}
 
 export type WalletActionType = {
   setState: (payload: WalletStateType) => void
@@ -183,6 +195,7 @@ export type WalletActionType = {
   signMessage: (msg: string) => Promise<string | null>
   disconnect: () => void
   currencyChange: (currency: string, callback: (currency: string) => void) => void
+  signPsbt: (psbt: string, options: PsbtOptionsType) => Promise<WalletResultType | string | null>
 }
 
 export type GlobalState = WalletStateType & WalletActionType & DogePriceType & BlockNumberType

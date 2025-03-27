@@ -15,7 +15,7 @@ interface ConnectType<T> {
 export class Bridge {
   private token: string | null = null
   private eventSource: EventSource | null = null
-  private BRIDGE_URL: string = 'https://bridge.unielon.com'
+  private BRIDGE_URL: string = import.meta.env.VITE_API_BRIDGE_URL
 
   async getToken<T extends Record<string, unknown>>(data: T = {} as T): Promise<string> {
     const res = await fetch(`${this.BRIDGE_URL}/message`, { method: 'POST', body: JSON.stringify({ data: { ...data } }) }).then((res) => res.json())

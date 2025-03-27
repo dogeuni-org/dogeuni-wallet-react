@@ -1,8 +1,8 @@
 import { useState } from 'react'
 
 export function useUpload() {
-  const IPFS_URL = 'https://ipfs.unielon.com'
-  const IPFS_UPLOAD_URL = 'https://api.unielon.com/v4/info/ipfs/upload'
+  const IPFS_URL: string = import.meta.env.VITE_API_IPFS_URL
+  const IPFS_UPLOAD_URL: string = `${import.meta.env.VITE_API_DOGEUNI_URL}/v4/info/ipfs/upload`
   const getUrl = (path: string) => `${IPFS_URL}/ipfs/${path}`
   const [loading, setLoading] = useState(false)
 

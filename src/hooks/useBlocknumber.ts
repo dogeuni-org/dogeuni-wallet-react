@@ -14,10 +14,10 @@ export interface BlockNumberType {
 export function useBlocknumber(): BlockNumberType {
   const [uniBlock, setUniBlock] = useState<number>(0)
   const [dogeBlock, setDogeBlock] = useState<number>(0)
-
+  const DOGEUNI_API = import.meta.env.VITE_API_DOGEUNI_URL
   const getBlockNumber = useCallback(async (): Promise<BlockDataType | undefined> => {
     try {
-      const res = await fetch('https://api.unielon.com/v4/info/blocknumber', { method: 'POST', body: JSON.stringify({}), headers: { 'Content-Type': 'application/json' } })
+      const res = await fetch(`${DOGEUNI_API}/v4/info/blocknumber`, { method: 'POST', body: JSON.stringify({}), headers: { 'Content-Type': 'application/json' } })
       const data = await res.json()
       const { unielon_height, chain_height } = data?.data || {}
       setUniBlock(unielon_height)

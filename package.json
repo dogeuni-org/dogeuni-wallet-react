@@ -1,13 +1,13 @@
 {
-  "name": "@unielon/wallet-connect-react",
+  "name": "@dogeuni/wallet-connect-react",
   "private": false,
-  "version": "0.0.44",
+  "version": "0.0.46",
   "type": "module",
   "author": "saul <ninasaul@protonmail.com>",
   "license": "MIT",
   "keywords": [
     "dogeuni",
-    "dogeuni & unielon & wallet connect",
+    "dogeuni & wallet connect",
     "drc20",
     "dogecoin",
     "dogecoin wallet connect"

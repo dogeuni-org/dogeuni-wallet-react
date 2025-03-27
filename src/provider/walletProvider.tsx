@@ -22,6 +22,7 @@ import {
   GlobalState,
   PumpType,
   DogeType,
+  PsbtOptionsType,
 } from './types'
 import { useBlocknumber, useDogePrice, useLocalStorage } from '../hooks'
 export const currencyList = [
@@ -73,6 +74,7 @@ export const initialState: WalletStateType = {
     unconfirmed: null,
     total: null,
   },
+  installed: false,
   network: null,
   account: [],
   sendLoading: false,
@@ -99,7 +101,7 @@ const walletReducer = (state: WalletStateType, action: ActionType) => {
 }
 
 export const getWalletInfo = async (): Promise<WalletStateType> => {
-  const wallet = window?.unielon
+  const wallet = typeof window !== 'undefined' && window.unielon ? window.unielon : null
   if (!wallet) {
     throw new Error('🐶 Unielon wallet not installed...')
   } else {
@@ -114,8 +116,8 @@ export const getWalletInfo = async (): Promise<WalletStateType> => {
 }
 
 export const walletAction = (dispatch: React.Dispatch<ActionType>): WalletActionType => {
-  const wallet = window?.unielon
-  const { sendBox, createSwap, sendDogecoin, sendTrade, sendNft, createLp, createPump, sendDoge } = wallet || {}
+  const wallet = useRef(window?.unielon).current
+  const { sendBox, createSwap, sendDogecoin, sendTrade, sendNft, createLp, createPump, sendDoge, signPsbt } = wallet || {}
   function setState(payload: WalletStateType) {
     dispatch({
       type: 'SET_STATE',
@@ -123,12 +125,12 @@ export const walletAction = (dispatch: React.Dispatch<ActionType>): WalletAction
     })
   }
 
-  async function sendTransaction(run: (params: RunActionType) => Promise<WalletResultType | null>, params: RunActionType) {
+  async function sendTransaction(run: (params: RunActionType, options?: unknown) => Promise<WalletResultType | null>, params: RunActionType, options?: unknown) {
     const wallet = window?.unielon
     if (!wallet || !run) return null
     try {
       setState({ sendLoading: true, sendError: null })
-      const result = await run(params)
+      const result = await run(params, options)
       const { code, msg, data } = result || {}
       if (code !== 200 && data?.tx_hash) {
         setState({ sendError: msg || 'send transaction failed' })
@@ -140,7 +142,7 @@ export const walletAction = (dispatch: React.Dispatch<ActionType>): WalletAction
       })
       return null
     } finally {
-      setState({ sendLoading: true })
+      setState({ sendLoading: false })
     }
   }
 
@@ -213,6 +215,9 @@ export const walletAction = (dispatch: React.Dispatch<ActionType>): WalletAction
     sendPump: async (params: PumpType[]) => {
       return await sendTransaction(createPump, params)
     },
+    signPsbt: async (psbtHex: string, options: PsbtOptionsType) => {
+      return await signPsbt(psbtHex, options)
+    },
   }
 }
 
@@ -242,9 +247,9 @@ export const WalletProvider = ({ children, blockRefresh }: WalletProviderProps) 
   const initWallet = async () => {
     getBlockNumber()
     initPriceFee()
-    if (!wallet) {
-      setState({ installed: false, initialize: false })
-    } else {
+    const installed = !(typeof window === 'undefined' || !window?.unielon)
+    setState({ installed })
+    if (installed) {
       const result = await getWalletInfo()
       const { address } = result
       setState(address ? { connected: true, ...result } : { connected: false })
