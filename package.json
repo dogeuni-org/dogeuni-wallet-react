@@ -16,14 +16,14 @@
     "dogeuni react provider"
   ],
   "bugs": {
-    "url": "https://github.com/unielon-org/unielon-wallet-react/issues"
+    "url": "https://github.com/dogeuni-org/dogeuni-wallet-react/issues"
   },
   "repository": {
-    "url": "https://github.com/unielon-org/unielon-wallet-react",
+    "url": "https://github.com/dogeuni-org/dogeuni-wallet-react",
     "type": "git"
   },
   "homepage": "https://dogeuni.com",
-  "description": "unielon wallet js sdk rom react provider、swap pools base action, base use for React",
+  "description": "dogeuni wallet js sdk rom react provider、swap pools base action, base use for React",
   "main": "dist/index.js",
   "module": "dist/index.esm.js",
   "types": "dist/lib/index.d.ts",
