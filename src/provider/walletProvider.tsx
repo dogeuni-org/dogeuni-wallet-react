@@ -2,6 +2,7 @@ import React, { createContext, useReducer, useContext, useEffect, useRef, Fragme
 declare global {
   interface Window {
     unielon?: any
+    dogeuni?: any
   }
 }
 
@@ -23,6 +24,7 @@ import {
   PumpType,
   DogeType,
   PsbtOptionsType,
+  CreateInviteType,
 } from './types'
 import { useBlocknumber, useDogePrice, useLocalStorage } from '../hooks'
 export const currencyList = [
@@ -101,7 +103,7 @@ const walletReducer = (state: WalletStateType, action: ActionType) => {
 }
 
 export const getWalletInfo = async (): Promise<WalletStateType> => {
-  const wallet = typeof window !== 'undefined' && window.unielon ? window.unielon : null
+  const wallet = typeof window !== 'undefined' && (window.dogeuni || window.unielon)
   if (!wallet) {
     throw new Error('🐶 Unielon wallet not installed...')
   } else {
@@ -116,8 +118,9 @@ export const getWalletInfo = async (): Promise<WalletStateType> => {
 }
 
 export const walletAction = (dispatch: React.Dispatch<ActionType>): WalletActionType => {
-  const wallet = useRef(window?.unielon).current
-  const { sendBox, createSwap, sendDogecoin, sendTrade, sendNft, createLp, createPump, sendDoge, signPsbt } = wallet || {}
+  const wallet = useRef(window?.dogeuni || window?.unielon).current
+  const { sendBox, createSwap, sendDogecoin, sendTrade, sendNft, createLp, createPump, sendDoge, signPsbt, createInvite } = wallet || {}
+
   function setState(payload: WalletStateType) {
     dispatch({
       type: 'SET_STATE',
@@ -218,6 +221,9 @@ export const walletAction = (dispatch: React.Dispatch<ActionType>): WalletAction
     signPsbt: async (psbtHex: string, options: PsbtOptionsType) => {
       return await signPsbt(psbtHex, options)
     },
+    createInvite: async (params: CreateInviteType) => {
+      return await createInvite(params)
+    },
   }
 }
 
@@ -238,7 +244,7 @@ export const WalletProvider = ({ children, blockRefresh }: WalletProviderProps) 
   const { setState, accountChange, networkChange } = action as WalletActionType
   const { connected } = state
 
-  if (typeof window === 'undefined' || !window?.unielon) {
+  if (!(typeof window !== 'undefined' && (window?.unielon || window?.dogeuni))) {
     return <Fragment>{children}</Fragment>
   }
 
@@ -247,7 +253,7 @@ export const WalletProvider = ({ children, blockRefresh }: WalletProviderProps) 
   const initWallet = async () => {
     getBlockNumber()
     initPriceFee()
-    const installed = !(typeof window === 'undefined' || !window?.unielon)
+    const installed = !!(typeof window !== 'undefined' && (window?.unielon || window?.dogeuni))
     setState({ installed })
     if (installed) {
       const result = await getWalletInfo()

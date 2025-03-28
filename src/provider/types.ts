@@ -85,7 +85,7 @@ export type DogeType = {
   sendAmount: number
 }
 
-export type RunActionType = InscribeType | TransferType | NftType | BoxType | SwapType | ExchangeType | StakeType | PumpType[] | unknown
+export type RunActionType = InscribeType | TransferType | NftType | BoxType | SwapType | ExchangeType | StakeType | PumpType[] | CreateInviteType | unknown
 
 export type BalanceType = {
   confirmed: string | null
@@ -176,6 +176,12 @@ export interface PsbtOptionsType {
   toSignInputs: ToSignInputsType[]
 }
 
+export interface CreateInviteType {
+  invite_address: string
+  p: string
+  op: string
+}
+
 export type WalletActionType = {
   setState: (payload: WalletStateType) => void
   connect: () => void
@@ -196,6 +202,7 @@ export type WalletActionType = {
   disconnect: () => void
   currencyChange: (currency: string, callback: (currency: string) => void) => void
   signPsbt: (psbt: string, options: PsbtOptionsType) => Promise<WalletResultType | string | null>
+  createInvite: (params: CreateInviteType) => Promise<WalletResultType | null>
 }
 
 export type GlobalState = WalletStateType & WalletActionType & DogePriceType & BlockNumberType
