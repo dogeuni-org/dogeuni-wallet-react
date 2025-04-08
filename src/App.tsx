@@ -62,7 +62,6 @@ function App() {
     <div style={{ fontSize: 12 }}>
       <div style={{ display: 'flex', background: '#f8f8f8', gap: '10px', alignContent: 'center', justifyContent: 'space-between', padding: 10 }}>
         <div>
-          <h1 style={{ fontWeight: 900, margin: 0, padding: 0, fontSize: 14, textTransform: 'uppercase' }}>DOGEUNI.WALLET</h1>
           <div style={{ textTransform: 'uppercase' }}>
             <p style={{ fontSize: '0.8em' }}>
               BLOCK_HEIGHT:DOGE{dogeBlock}-DOGEUNI:{uniBlock}

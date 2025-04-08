@@ -129,7 +129,7 @@ export const walletAction = (dispatch: React.Dispatch<ActionType>): WalletAction
   }
 
   async function sendTransaction(run: (params: RunActionType, options?: unknown) => Promise<WalletResultType | null>, params: RunActionType, options?: unknown) {
-    const wallet = window?.unielon
+    const wallet = typeof window !== 'undefined' && (window.dogeuni || window.unielon)
     if (!wallet || !run) return null
     try {
       setState({ sendLoading: true, sendError: null })
@@ -143,7 +143,7 @@ export const walletAction = (dispatch: React.Dispatch<ActionType>): WalletAction
       setState({
         sendError: error.message,
       })
-      return null
+      return error || null
     } finally {
       setState({ sendLoading: false })
     }
@@ -222,7 +222,7 @@ export const walletAction = (dispatch: React.Dispatch<ActionType>): WalletAction
       return await signPsbt(psbtHex, options)
     },
     createInvite: async (params: CreateInviteType) => {
-      return await createInvite(params)
+      return await sendTransaction(createInvite, params)
     },
   }
 }
@@ -248,19 +248,18 @@ export const WalletProvider = ({ children, blockRefresh }: WalletProviderProps) 
     return <Fragment>{children}</Fragment>
   }
 
-  const wallet = window?.unielon
-
   const initWallet = async () => {
     getBlockNumber()
     initPriceFee()
     const installed = !!(typeof window !== 'undefined' && (window?.unielon || window?.dogeuni))
     setState({ installed })
     if (installed) {
+      const wallet = window?.unielon || window?.dogeuni
       const result = await getWalletInfo()
       const { address } = result
       setState(address ? { connected: true, ...result } : { connected: false })
-      wallet && wallet.on('accountsChanged', accountChange)
-      wallet && wallet.on('networkChanged', networkChange)
+      wallet.on('accountsChanged', accountChange)
+      wallet.on('networkChanged', networkChange)
     }
   }
 
@@ -273,6 +272,7 @@ export const WalletProvider = ({ children, blockRefresh }: WalletProviderProps) 
       timer = setInterval(() => getBlockNumber(), blockRefresh || 1000 * 60)
     }
     return () => {
+      const wallet = window?.unielon || window?.dogeuni
       connected && wallet && wallet.removeListener('accountsChanged', accountChange)
       connected && wallet && wallet.removeListener('networkChanged', networkChange)
       timer && clearInterval(timer)

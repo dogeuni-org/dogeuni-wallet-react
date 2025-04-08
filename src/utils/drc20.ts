@@ -43,7 +43,7 @@ export const valueFormat = (value: string | number, decimal: number = 8) => {
   return new BigNumber(value).dividedBy(Math.pow(10, decimal)).toString()
 }
 
-export const getTickName = (tick: string | null | undefined, doge: 0 | 1 = 1) => {
+export const getTickName = (tick: string | null | undefined, doge: number | unknown = 1) => {
   if (!tick) return ''
   const tickName = tick && tick.toUpperCase().includes('(WRAPPED-') ? tick.split('(WRAPPED-')[0] : tick
   return tickName === 'WDOGE' ? (doge === 1 ? 'DOGE' : 'WDOGE') : tickName

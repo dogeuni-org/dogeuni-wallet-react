@@ -1,7 +1,7 @@
 {
   "name": "@dogeuni-org/wallet-connect-react",
   "private": false,
-  "version": "0.0.7",
+  "version": "0.0.13",
   "type": "module",
   "author": "saul0000 <ninasaul@protonmail.com>",
   "license": "MIT",

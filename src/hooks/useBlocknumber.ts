@@ -1,7 +1,7 @@
 import { useState, useCallback } from 'react'
 
 export interface BlockDataType {
-  unielon_height: number | null
+  index_height: number | null
   chain_height: number | null
 }
 
@@ -19,13 +19,13 @@ export function useBlocknumber(): BlockNumberType {
     try {
       const res = await fetch(`${DOGEUNI_API}/v4/info/blocknumber`, { method: 'POST', body: JSON.stringify({}), headers: { 'Content-Type': 'application/json' } })
       const data = await res.json()
-      const { unielon_height, chain_height } = data?.data || {}
-      setUniBlock(unielon_height)
+      const { index_height, chain_height } = data?.data || {}
+      setUniBlock(index_height)
       setDogeBlock(chain_height)
-      return { unielon_height, chain_height }
+      return { index_height, chain_height }
     } catch (error) {
       console.error('Failed to fetch block numbers:', error)
-      return { unielon_height: null, chain_height: null }
+      return { index_height: null, chain_height: null }
     }
   }, [])
 
