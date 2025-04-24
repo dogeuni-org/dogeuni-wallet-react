@@ -42,8 +42,8 @@ function SendActions() {
       <SendItem key={3} onSubmit={sendSwap} title="sendSwap" />
       <SendItem key={4} onSubmit={sendTransfer} title="sendTransfer" />
       <SendItem key={5} onSubmit={sendBox} title="sendBox" />
-      <SendItem key={22} onSubmit={sendNft} title="sendNfts" />
-      <SendItem key={22} onSubmit={sendPump} title="sendPump" />
+      <SendItem key={6} onSubmit={sendNft} title="sendNfts" />
+      <SendItem key={7} onSubmit={sendPump} title="sendPump" />
     </div>
   )
 }
@@ -90,8 +90,8 @@ function App() {
                   value={currency}
                 >
                   {currencyList &&
-                    currencyList.map((currency) => (
-                      <option key={currency.name} value={currency.name}>
+                    currencyList.map((currency, index) => (
+                      <option key={`${currency.name}_${index}`} value={currency.name}>
                         {currency.symbol} : {currency.name}
                       </option>
                     ))}

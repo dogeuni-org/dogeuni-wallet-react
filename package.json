@@ -1,7 +1,7 @@
 {
   "name": "@dogeuni-org/wallet-connect-react",
   "private": false,
-  "version": "0.0.13",
+  "version": "0.0.17",
   "type": "module",
   "author": "saul0000 <ninasaul@protonmail.com>",
   "license": "MIT",
@@ -29,7 +29,7 @@
     "node": ">=16"
   },
   "scripts": {
-    "dev": "vite",
+    "dev": "vite --port 9090",
     "build": "tsc && vite build",
     "build:dev": "tsc && vite build --watch",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",

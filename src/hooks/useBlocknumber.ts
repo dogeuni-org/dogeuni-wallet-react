@@ -24,7 +24,7 @@ export function useBlocknumber(): BlockNumberType {
       setDogeBlock(chain_height)
       return { index_height, chain_height }
     } catch (error) {
-      console.error('Failed to fetch block numbers:', error)
+      // console.error('Failed to fetch block numbers:', error)
       return { index_height: null, chain_height: null }
     }
   }, [])

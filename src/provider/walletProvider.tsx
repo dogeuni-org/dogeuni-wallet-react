@@ -1,4 +1,4 @@
-import React, { createContext, useReducer, useContext, useEffect, useRef, Fragment } from 'react'
+import React, { createContext, useReducer, useContext, useEffect, useRef } from 'react'
 declare global {
   interface Window {
     unielon?: any
@@ -238,15 +238,11 @@ export const WalletProvider = ({ children, blockRefresh }: WalletProviderProps) 
   const [state, dispatch] = useReducer<React.Reducer<WalletStateType, ActionType>>(walletReducer, initialState)
   const action = walletAction(dispatch)
   const { uniBlock, dogeBlock, getBlockNumber } = useBlocknumber()
-  const { price, fee, getPrice, initPriceFee, getFee } = useDogePrice()
+  const { price, fee, getPrice, initPriceFee, getFee, getInfoPrice } = useDogePrice()
   const [currency, setCurrency] = useLocalStorage<{ currency: string; time: number }>('currency', { currency: 'usd', time: new Date().getTime() })
   const initRef = useRef<boolean | undefined>(undefined)
   const { setState, accountChange, networkChange } = action as WalletActionType
   const { connected } = state
-
-  if (!(typeof window !== 'undefined' && (window?.unielon || window?.dogeuni))) {
-    return <Fragment>{children}</Fragment>
-  }
 
   const initWallet = async () => {
     getBlockNumber()
@@ -266,10 +262,10 @@ export const WalletProvider = ({ children, blockRefresh }: WalletProviderProps) 
   useEffect(() => {
     let timer = null
     if (!initRef.current) {
-      initRef.current = true
+      getPrice(state.currency)
       initWallet()
-      getPrice(currency?.currency)
       timer = setInterval(() => getBlockNumber(), blockRefresh || 1000 * 60)
+      initRef.current = true
     }
     return () => {
       const wallet = window?.unielon || window?.dogeuni
@@ -280,13 +276,18 @@ export const WalletProvider = ({ children, blockRefresh }: WalletProviderProps) 
   }, [])
 
   useEffect(() => {
-    if (initRef.current && state.currency && state.currency !== currency?.currency) {
+    console.log(`currency changed::`, currency)
+    if (state.currency && state.currency !== currency?.currency) {
       getPrice(state.currency)
       setCurrency({ currency: state.currency, time: new Date().getTime() })
     }
   }, [state.currency])
 
-  const value: GlobalState = { ...state, ...action, setState, getBlockNumber, uniBlock, dogeBlock, price, fee, getFee, getPrice, initPriceFee }
+  const value: GlobalState = { ...state, ...action, setState, getBlockNumber, uniBlock, dogeBlock, price, fee, getFee, getPrice, getInfoPrice, initPriceFee }
+
+  // if (!(typeof window !== 'undefined' && (window?.unielon || window?.dogeuni))) {
+  //   return <Fragment>{children}</Fragment>
+  // }
   return <UnielonWalletContext.Provider value={value}>{children}</UnielonWalletContext.Provider>
 }
 

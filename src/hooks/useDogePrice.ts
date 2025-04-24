@@ -6,6 +6,7 @@ export interface DogePriceType {
   fee: DogeFeeType
   getFee: () => void
   getPrice: (c?: string) => void
+  getInfoPrice: () => void
 }
 export interface DogeFeeType {
   low: string | number
@@ -19,6 +20,7 @@ export function useDogePrice(): DogePriceType {
 
   const DOGE_PRICE_COINGECKO = (coin: string) => `https://api.coingecko.com/api/v3/simple/price?ids=dogecoin&vs_currencies=${coin}`
   const DOGE_PRICE_CRYPTO = (coin: string) => `https://min-api.cryptocompare.com/data/price?fsym=DOGE&tsyms=${coin}`
+  const SWAP_PRICE = `https://api.dogeuni.com/v4/info/dogeprice`
   const RATE_FEE_URL = 'https://api.blockcypher.com/v1/doge/main'
 
   const fetchRes = async (url: string, config?: RequestInit) => {
@@ -27,6 +29,20 @@ export function useDogePrice(): DogePriceType {
       return result
     } catch (error) {
       return error
+    }
+  }
+
+  const getInfoPrice = async () => {
+    try {
+      const abortController = new AbortController()
+      const signal = abortController.signal
+      const data = await fetchRes(SWAP_PRICE, { signal, method: 'POST' })
+      console.log('data::', data)
+      const { last } = data || {}
+      setPrice(+last)
+      return data
+    } catch (error) {
+      console.log(error)
     }
   }
 
@@ -55,10 +71,11 @@ export function useDogePrice(): DogePriceType {
         return await getOtherPrice(c)
       }
     } catch {
-      return getOtherPrice(c)
+      return getInfoPrice()
     }
   }
 
+  // Get Dogecoin fee
   const getFee = async () => {
     try {
       const abortController = new AbortController()
@@ -77,5 +94,5 @@ export function useDogePrice(): DogePriceType {
     getFee()
   }
 
-  return { initPriceFee, price, getFee, fee, getPrice }
+  return { getInfoPrice, initPriceFee, price, getFee, fee, getPrice }
 }
