@@ -1,10 +1,16 @@
 import { useCallback, useState, useEffect } from 'react'
 
 export function useLocalStorage<T>(key: string, defaultValue: T | (() => T)): [T, React.Dispatch<React.SetStateAction<T>>, () => void] {
+  if (typeof window === 'undefined') {
+    throw new Error('useLocalStorage must be used in a browser environment')
+  }
   return useStorage(key, defaultValue, window.localStorage)
 }
 
 export function useSessionStorage<T>(key: string, defaultValue: T | (() => T)): [T, React.Dispatch<React.SetStateAction<T>>, () => void] {
+  if (typeof window === 'undefined') {
+    throw new Error('useSessionStorage must be used in a browser environment')
+  }
   return useStorage(key, defaultValue, window.sessionStorage)
 }
 

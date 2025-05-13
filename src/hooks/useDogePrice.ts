@@ -37,7 +37,7 @@ export function useDogePrice(): DogePriceType {
       const abortController = new AbortController()
       const signal = abortController.signal
       const data = await fetchRes(SWAP_PRICE, { signal, method: 'POST' })
-      console.log('data::', data)
+      // console.log('data::', data)
       const { last } = data || {}
       setPrice(+last)
       return data

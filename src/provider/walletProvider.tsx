@@ -283,6 +283,10 @@ export const WalletProvider = ({ children, blockRefresh }: WalletProviderProps) 
     }
   }, [state.currency])
 
+  useEffect(() => {
+    getInfoPrice()
+  }, [dogeBlock])
+
   const value: GlobalState = { ...state, ...action, setState, getBlockNumber, uniBlock, dogeBlock, price, fee, getFee, getPrice, getInfoPrice, initPriceFee }
 
   // if (!(typeof window !== 'undefined' && (window?.unielon || window?.dogeuni))) {
