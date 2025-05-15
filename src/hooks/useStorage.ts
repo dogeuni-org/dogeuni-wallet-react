@@ -1,17 +1,15 @@
 import { useCallback, useState, useEffect } from 'react'
 
+function isBrowserEnvironment(): boolean {
+  return typeof window !== 'undefined' && typeof window.localStorage !== 'undefined'
+}
+
 export function useLocalStorage<T>(key: string, defaultValue: T | (() => T)): [T, React.Dispatch<React.SetStateAction<T>>, () => void] {
-  if (typeof window === 'undefined') {
-    throw new Error('useLocalStorage must be used in a browser environment')
-  }
-  return useStorage(key, defaultValue, window.localStorage)
+  return isBrowserEnvironment() ? useStorage(key, defaultValue, window.localStorage) : [defaultValue as T, () => {}, () => {}]
 }
 
 export function useSessionStorage<T>(key: string, defaultValue: T | (() => T)): [T, React.Dispatch<React.SetStateAction<T>>, () => void] {
-  if (typeof window === 'undefined') {
-    throw new Error('useSessionStorage must be used in a browser environment')
-  }
-  return useStorage(key, defaultValue, window.sessionStorage)
+  return isBrowserEnvironment() ? useStorage(key, defaultValue, window.sessionStorage) : [defaultValue as T, () => {}, () => {}]
 }
 
 function useStorage<T>(key: string, defaultValue: T | (() => T), storageObject: Storage): [T, React.Dispatch<React.SetStateAction<T>>, () => void] {

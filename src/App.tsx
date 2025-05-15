@@ -105,7 +105,7 @@ function App() {
                 bridge.connect({
                   data: { client: 'test_wallet', callback_url: window.location.href },
                   onConnect: (token: string) => {
-                    window.open(`https://t.me/dogepumplolbot?start=${token}`, '_blank')
+                    typeof window !== 'undefined' && window.open(`https://t.me/dogepumplolbot?start=${token}`, '_blank')
                   },
                   onMessage: (res: any) => {
                     console.log(`data::`, res)

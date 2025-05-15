@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useCallback } from 'react'
 
 export interface DogePriceType {
   initPriceFee: () => void
@@ -21,7 +21,8 @@ export function useDogePrice(): DogePriceType {
   const DOGE_PRICE_COINGECKO = (coin: string) => `https://api.coingecko.com/api/v3/simple/price?ids=dogecoin&vs_currencies=${coin}`
   const DOGE_PRICE_CRYPTO = (coin: string) => `https://min-api.cryptocompare.com/data/price?fsym=DOGE&tsyms=${coin}`
   const SWAP_PRICE = `https://api.dogeuni.com/v4/info/dogeprice`
-  const RATE_FEE_URL = 'https://api.blockcypher.com/v1/doge/main'
+  const UNI_RATE_FEE_URL = `https://api.dogeuni.com/v4/info/dogegas`
+  // const RATE_FEE_URL = 'https://api.blockcypher.com/v1/doge/main'
 
   const fetchRes = async (url: string, config?: RequestInit) => {
     try {
@@ -37,12 +38,11 @@ export function useDogePrice(): DogePriceType {
       const abortController = new AbortController()
       const signal = abortController.signal
       const data = await fetchRes(SWAP_PRICE, { signal, method: 'POST' })
-      // console.log('data::', data)
       const { last } = data || {}
       setPrice(+last)
       return data
     } catch (error) {
-      console.log(error)
+      return error
     }
   }
 
@@ -76,11 +76,11 @@ export function useDogePrice(): DogePriceType {
   }
 
   // Get Dogecoin fee
-  const getFee = async () => {
+  const getFee = useCallback(async () => {
     try {
       const abortController = new AbortController()
       const signal = abortController.signal
-      const data = await fetchRes(RATE_FEE_URL, { signal })
+      const data = await fetchRes(UNI_RATE_FEE_URL, { signal })
       const { high_fee_per_kb: hight, low_fee_per_kb: low, medium_fee_per_kb: medium } = data || {}
       const feeList = { low, hight, medium }
       setFee(feeList)
@@ -88,7 +88,7 @@ export function useDogePrice(): DogePriceType {
     } catch (error) {
       console.warn(error)
     }
-  }
+  }, [])
 
   const initPriceFee = () => {
     getFee()

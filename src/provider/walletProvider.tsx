@@ -1,4 +1,5 @@
-import React, { createContext, useReducer, useContext, useEffect, useRef } from 'react'
+'use client'
+import React, { createContext, useReducer, useContext, useEffect, useRef, useCallback } from 'react'
 declare global {
   interface Window {
     unielon?: any
@@ -118,7 +119,7 @@ export const getWalletInfo = async (): Promise<WalletStateType> => {
 }
 
 export const walletAction = (dispatch: React.Dispatch<ActionType>): WalletActionType => {
-  const wallet = useRef(window?.dogeuni || window?.unielon).current
+  const wallet = useRef(typeof window !== 'undefined' && (window?.dogeuni || window?.unielon)).current
   const { sendBox, createSwap, sendDogecoin, sendTrade, sendNft, createLp, createPump, sendDoge, signPsbt, createInvite } = wallet || {}
 
   function setState(payload: WalletStateType) {
@@ -150,10 +151,8 @@ export const walletAction = (dispatch: React.Dispatch<ActionType>): WalletAction
   }
 
   async function getBalance() {
-    const wallet = window?.unielon
-    if (wallet) {
-      return await wallet.getBalance()
-    }
+    const wallet = typeof window !== 'undefined' && window?.unielon
+    if (wallet) return await wallet.getBalance()
   }
 
   return {
@@ -239,59 +238,55 @@ export const WalletProvider = ({ children, blockRefresh }: WalletProviderProps) 
   const action = walletAction(dispatch)
   const { uniBlock, dogeBlock, getBlockNumber } = useBlocknumber()
   const { price, fee, getPrice, initPriceFee, getFee, getInfoPrice } = useDogePrice()
-  const [currency, setCurrency] = useLocalStorage<{ currency: string; time: number }>('currency', { currency: 'usd', time: new Date().getTime() })
-  const initRef = useRef<boolean | undefined>(undefined)
+  const [currency, setCurrency] = useLocalStorage<{ currency: string; time: number }>('currency', { currency: 'usd', time: typeof window !== 'undefined' ? new Date().getTime() : 1119109377 })
   const { setState, accountChange, networkChange } = action as WalletActionType
   const { connected } = state
 
-  const initWallet = async () => {
+  const initWallet = useCallback(async () => {
     getBlockNumber()
     initPriceFee()
     const installed = !!(typeof window !== 'undefined' && (window?.unielon || window?.dogeuni))
     setState({ installed })
     if (installed) {
-      const wallet = window?.unielon || window?.dogeuni
+      const wallet = window?.dogeuni || window?.unielon
       const result = await getWalletInfo()
       const { address } = result
       setState(address ? { connected: true, ...result } : { connected: false })
       wallet.on('accountsChanged', accountChange)
       wallet.on('networkChanged', networkChange)
     }
-  }
+  }, [])
 
   useEffect(() => {
-    let timer = null
-    if (!initRef.current) {
-      getPrice(state.currency)
-      initWallet()
-      timer = setInterval(() => getBlockNumber(), blockRefresh || 1000 * 60)
-      initRef.current = true
-    }
+    initWallet()
+    const timer = setInterval(() => getBlockNumber(), blockRefresh || 1000 * 60)
     return () => {
-      const wallet = window?.unielon || window?.dogeuni
-      connected && wallet && wallet.removeListener('accountsChanged', accountChange)
-      connected && wallet && wallet.removeListener('networkChanged', networkChange)
+      if (typeof window !== 'undefined') {
+        const wallet = window?.unielon || window?.dogeuni
+        connected && wallet && wallet.removeListener('accountsChanged', accountChange)
+        connected && wallet && wallet.removeListener('networkChanged', networkChange)
+      }
       timer && clearInterval(timer)
     }
   }, [])
 
   useEffect(() => {
-    console.log(`currency changed::`, currency)
     if (state.currency && state.currency !== currency?.currency) {
       getPrice(state.currency)
-      setCurrency({ currency: state.currency, time: new Date().getTime() })
+      if (typeof window !== 'undefined') setCurrency({ currency: state.currency, time: new Date().getTime() })
     }
   }, [state.currency])
 
-  useEffect(() => {
+  const getDogePrice = useCallback(() => {
     getInfoPrice()
+  }, [dogeBlock])
+
+  useEffect(() => {
+    dogeBlock && getDogePrice()
   }, [dogeBlock])
 
   const value: GlobalState = { ...state, ...action, setState, getBlockNumber, uniBlock, dogeBlock, price, fee, getFee, getPrice, getInfoPrice, initPriceFee }
 
-  // if (!(typeof window !== 'undefined' && (window?.unielon || window?.dogeuni))) {
-  //   return <Fragment>{children}</Fragment>
-  // }
   return <UnielonWalletContext.Provider value={value}>{children}</UnielonWalletContext.Provider>
 }
 
