@@ -80,7 +80,7 @@ export function useDogePrice(): DogePriceType {
     try {
       const abortController = new AbortController()
       const signal = abortController.signal
-      const data = await fetchRes(UNI_RATE_FEE_URL, { signal })
+      const data = await fetchRes(UNI_RATE_FEE_URL, { signal, method: 'POST' })
       const { high_fee_per_kb: hight, low_fee_per_kb: low, medium_fee_per_kb: medium } = data || {}
       const feeList = { low, hight, medium }
       setFee(feeList)
