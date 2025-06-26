@@ -1,7 +1,7 @@
 {
   "name": "@dogeuni-org/wallet-connect-react",
   "private": false,
-  "version": "0.0.29",
+  "version": "0.0.30",
   "type": "module",
   "author": "saul0000 <ninasaul@protonmail.com>",
   "license": "MIT",
@@ -22,11 +22,17 @@
   },
   "homepage": "https://dogeuni.com",
   "description": "dogeuni wallet js sdk rom react provider、swap pools base action, base use for React",
-  "main": "dist/index.js",
-  "module": "dist/index.esm.js",
+  "main": "dist/index.cjs.js",
+  "module": "dist/index.js",
   "types": "dist/lib/index.d.ts",
   "engines": {
     "node": ">=16"
+  },
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs.js"
+    }
   },
   "scripts": {
     "dev": "vite --port 9090",

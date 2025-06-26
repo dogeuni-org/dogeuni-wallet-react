@@ -9,6 +9,7 @@ export default defineConfig({
     lib: {
       entry: 'src/lib/index.ts',
       name: '@dogeuni-org/wallet-connect-react',
+      formats: ['es', 'cjs'],
       fileName: (format, entryName) => (format === 'es' ? `${entryName}.js` : `${entryName}.${format}.js`),
     },
     rollupOptions: {
